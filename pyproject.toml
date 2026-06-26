@@ -4,6 +4,10 @@ dynamic = ["version"]
 description = "Parse whitespace-based network configuration into a tree of parent/child relationships."
 readme = "README.md"
 requires-python = ">=3.11"
+license = "Apache-2.0"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+]
 dependencies = []
 
 [build-system]
