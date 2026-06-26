@@ -6,12 +6,62 @@ import re
 from collections.abc import Iterator
 
 
-class ConfigNode:
+class _Queryable:
+    """Regex query behaviour shared by :class:`Config` and :class:`ConfigNode`.
+
+    Subclasses expose their immediate child nodes via :attr:`_query_nodes`; the
+    subtree traversal and lookup logic lives here once, so the whole
+    configuration and any individual node are queried the same way.
+    """
+
+    __slots__ = ()
+
+    @property
+    def _query_nodes(self) -> list[ConfigNode]:
+        """The immediate child nodes this object queries over."""
+        raise NotImplementedError
+
+    def walk(self) -> Iterator[ConfigNode]:
+        """Yield every descendant node, depth-first (pre-order).
+
+        The object itself is not yielded; iteration descends into the immediate
+        child nodes in configuration order.
+        """
+        for node in self._query_nodes:
+            yield node
+            yield from node.walk()
+
+    def find(self, pattern: str | re.Pattern[str]) -> list[ConfigNode]:
+        """Return all descendant nodes whose text matches ``pattern``.
+
+        Searches the entire subtree, not just immediate children. See
+        :meth:`ConfigNode.matches` for the matching semantics.
+        """
+        compiled = re.compile(pattern)
+        return [node for node in self.walk() if node.matches(compiled)]
+
+    def find_child(self, pattern: str | re.Pattern[str]) -> ConfigNode | None:
+        """Return the first immediate child matching ``pattern``, or ``None``.
+
+        Only immediate children are considered, in configuration order.
+        """
+        compiled = re.compile(pattern)
+        for node in self._query_nodes:
+            if node.matches(compiled):
+                return node
+        return None
+
+    def has_child(self, pattern: str | re.Pattern[str]) -> bool:
+        """Return whether any immediate child matches ``pattern``."""
+        return self.find_child(pattern) is not None
+
+
+class ConfigNode(_Queryable):
     """One line of configuration and its place in the hierarchy.
 
     Every node knows its own (stripped) text, its parent, and its children.
-    A configuration is represented as a tree of these nodes hanging off a
-    synthetic root node whose ``text`` is empty and whose ``parent`` is ``None``.
+    Top-level lines (those at column 0) have no parent; deeper lines point at
+    the line they are indented beneath.
     """
 
     __slots__ = ("text", "indent", "parent", "children")
@@ -29,20 +79,21 @@ class ConfigNode:
         self.children: list[ConfigNode] = []
 
     @property
-    def is_root(self) -> bool:
-        """True for the synthetic top-level node that owns the whole tree."""
-        return self.parent is None
+    def _query_nodes(self) -> list[ConfigNode]:
+        """A node queries over its own direct children."""
+        return self.children
 
     @property
     def path(self) -> list[str]:
         """The chain of ancestor lines down to this one, top-most first.
 
-        Excludes the synthetic root. For ``ip address ...`` nested under an
-        interface this returns ``["interface Gi0/0", "ip address ..."]``.
+        For ``ip address ...`` nested under an interface this returns
+        ``["interface Gi0/0", "ip address ..."]``. A top-level line's path is
+        just its own text.
         """
         chain: list[str] = []
         node: ConfigNode | None = self
-        while node is not None and not node.is_root:
+        while node is not None:
             chain.append(node.text)
             node = node.parent
         chain.reverse()
@@ -57,40 +108,6 @@ class ConfigNode:
         """
         return re.search(pattern, self.text) is not None
 
-    def walk(self) -> Iterator[ConfigNode]:
-        """Yield every descendant of this node, depth-first (pre-order).
-
-        The node itself is not yielded; iteration descends into children in
-        configuration order.
-        """
-        for child in self.children:
-            yield child
-            yield from child.walk()
-
-    def find(self, pattern: str | re.Pattern[str]) -> list[ConfigNode]:
-        """Return all descendants whose text matches ``pattern``.
-
-        Searches the entire subtree, not just direct children. See
-        :meth:`matches` for the matching semantics.
-        """
-        compiled = re.compile(pattern)
-        return [node for node in self.walk() if node.matches(compiled)]
-
-    def find_child(self, pattern: str | re.Pattern[str]) -> ConfigNode | None:
-        """Return the first direct child matching ``pattern``, or ``None``.
-
-        Only direct children are considered, in configuration order.
-        """
-        compiled = re.compile(pattern)
-        for child in self.children:
-            if child.matches(compiled):
-                return child
-        return None
-
-    def has_child(self, pattern: str | re.Pattern[str]) -> bool:
-        """Return whether any direct child matches ``pattern``."""
-        return self.find_child(pattern) is not None
-
     def __iter__(self) -> Iterator[ConfigNode]:
         """Iterating a node yields its direct children."""
         return iter(self.children)
@@ -101,6 +118,4 @@ class ConfigNode:
 
     def __repr__(self) -> str:
         """Return a concise, debugging-friendly representation."""
-        if self.is_root:
-            return f"ConfigNode(<root>, children={len(self.children)})"
         return f"ConfigNode({self.text!r}, children={len(self.children)})"
