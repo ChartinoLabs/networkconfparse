@@ -3,8 +3,24 @@ name = "networkconfparse"
 dynamic = ["version"]
 description = "Parse whitespace-based network configuration into a tree of parent/child relationships."
 readme = "README.md"
+authors = [
+    { name = "Christopher Hart", email = "christopherjhart95@gmail.com" },
+    { name = "Andrea Testino", email = "aitestino@gmail.com" },
+]
 requires-python = ">=3.11"
 license = "Apache-2.0"
+keywords = [
+    "network",
+    "configuration",
+    "config",
+    "parser",
+    "cisco",
+    "ios",
+    "iosxe",
+    "iosxr",
+    "nxos",
+    "automation",
+]
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
