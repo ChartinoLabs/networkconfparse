@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 
 
@@ -46,6 +47,49 @@ class ConfigNode:
             node = node.parent
         chain.reverse()
         return chain
+
+    def matches(self, pattern: str | re.Pattern[str]) -> bool:
+        """Return whether this node's text matches ``pattern``.
+
+        ``pattern`` may be a string (treated as a regular expression) or a
+        pre-compiled pattern. Matching uses :func:`re.search`, so the pattern
+        need not be anchored to match anywhere in the line.
+        """
+        return re.search(pattern, self.text) is not None
+
+    def walk(self) -> Iterator[ConfigNode]:
+        """Yield every descendant of this node, depth-first (pre-order).
+
+        The node itself is not yielded; iteration descends into children in
+        configuration order.
+        """
+        for child in self.children:
+            yield child
+            yield from child.walk()
+
+    def find(self, pattern: str | re.Pattern[str]) -> list[ConfigNode]:
+        """Return all descendants whose text matches ``pattern``.
+
+        Searches the entire subtree, not just direct children. See
+        :meth:`matches` for the matching semantics.
+        """
+        compiled = re.compile(pattern)
+        return [node for node in self.walk() if node.matches(compiled)]
+
+    def find_child(self, pattern: str | re.Pattern[str]) -> ConfigNode | None:
+        """Return the first direct child matching ``pattern``, or ``None``.
+
+        Only direct children are considered, in configuration order.
+        """
+        compiled = re.compile(pattern)
+        for child in self.children:
+            if child.matches(compiled):
+                return child
+        return None
+
+    def has_child(self, pattern: str | re.Pattern[str]) -> bool:
+        """Return whether any direct child matches ``pattern``."""
+        return self.find_child(pattern) is not None
 
     def __iter__(self) -> Iterator[ConfigNode]:
         """Iterating a node yields its direct children."""
