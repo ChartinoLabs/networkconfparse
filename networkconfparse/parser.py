@@ -12,6 +12,16 @@ def _leading_spaces(line: str) -> int:
     return len(expanded) - len(expanded.lstrip())
 
 
+# Lines beginning with this marker are comments or section delimiters across
+# Cisco IOS / IOS XE / IOS XR / NX-OS and carry no configuration semantics.
+_COMMENT_PREFIX = "!"
+
+
+def _is_comment(line: str) -> bool:
+    """Whether a stripped line is a comment or section delimiter."""
+    return line.startswith(_COMMENT_PREFIX)
+
+
 def parse(text: str) -> Config:
     """Parse whitespace-indented configuration into a :class:`Config`.
 
@@ -20,7 +30,9 @@ def parse(text: str) -> Config:
     with strictly less indentation, which handles IOS (1 space), NX-OS (2
     spaces), and inconsistent indentation alike.
 
-    Blank lines are skipped. Returns a :class:`Config` wrapping the top-level
+    Blank lines and comment/delimiter lines (those beginning with ``!``) are
+    skipped, since the latter are redundant with indentation and carry no
+    configuration semantics. Returns a :class:`Config` wrapping the top-level
     (column 0) lines; each line's children are the lines indented beneath it.
     """
     # A throwaway sentinel anchors the parent stack during construction so that
@@ -30,7 +42,8 @@ def parse(text: str) -> Config:
     stack: list[ConfigNode] = [sentinel]
 
     for raw in text.splitlines():
-        if not raw.strip():
+        stripped = raw.strip()
+        if not stripped or _is_comment(stripped):
             continue
 
         indent = _leading_spaces(raw)
@@ -41,7 +54,7 @@ def parse(text: str) -> Config:
             stack.pop()
 
         parent = stack[-1]
-        node = ConfigNode(text=raw.strip(), indent=indent, parent=parent)
+        node = ConfigNode(text=stripped, indent=indent, parent=parent)
         parent.children.append(node)
         stack.append(node)
 
