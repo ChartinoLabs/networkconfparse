@@ -110,6 +110,10 @@ missing_deny = [
 - [Changelog](CHANGELOG.md) - Release history built from changelog fragments
 - [Changelog Fragments Guide](changes/README.md) - How to add release-note fragments
 
+## Acknowledgments
+
+- **Conceptual inspiration** — The idea of modeling a network device configuration as a queryable parent/child tree owes a great deal to [Mike Pennington](https://github.com/mpenning)'s work on [CiscoConfParse](https://github.com/mpenning/ciscoconfparse) and [CiscoConfParse2](https://github.com/mpenning/ciscoconfparse2). networkconfparse is an independent, clean-room implementation; it is not affiliated with, derived from, or endorsed by those projects.
+
 ## Status
 
 Early development. The API is still evolving and may change as the library matures.
