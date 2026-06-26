@@ -110,3 +110,7 @@ dev = [
     "ty==0.0.54",
     "xenon==0.9.3",
 ]
+docs = [
+    "mkdocs-material==9.7.6",
+    "mkdocstrings[python]==1.0.4",
+]

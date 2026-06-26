@@ -144,3 +144,17 @@ jobs:
         run: uv sync --group dev --resolution lowest-direct
       - name: Run unit tests with lowest dependency versions
         run: uv run pytest
+  docs-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-python-uv
+        with:
+          python-version: "3.13"
+      - name: Install docs dependencies
+        run: uv sync --group docs
+      - name: Build docs (strict)
+        run: uv run mkdocs build --strict
