@@ -1,1 +1,0 @@
-Add GitHub Actions CI and PyPI release pipelines, hatch-vcs dynamic versioning, and towncrier-managed changelog fragments.
