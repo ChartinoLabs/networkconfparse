@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
+
+from .typedefs import Patterns, Predicate
+from .utils import _as_list
 
 
 class _Queryable:
@@ -106,6 +109,84 @@ class _Queryable:
         """Return whether any immediate child matches ``pattern``/``where``."""
         return self.find_child(pattern, where=where) is not None
 
+    def find_with_child(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        child: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` that have ``child`` as direct children.
+
+        ``child`` is one regex or an iterable of them; every pattern must match
+        some direct child (logical AND). Implemented with :meth:`find` and a
+        ``where`` predicate.
+        """
+        children = _as_list(child)
+        return self.find(
+            pattern,
+            where=lambda node: all(node.has_child(c) for c in children),
+        )
+
+    def find_with_descendant(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        descendant: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` with ``descendant`` anywhere below.
+
+        ``descendant`` is one regex or an iterable of them; every pattern must
+        match some descendant at any depth (logical AND). Implemented with
+        :meth:`find` and a ``where`` predicate.
+        """
+        descendants = _as_list(descendant)
+        return self.find(
+            pattern,
+            where=lambda node: all(node.find_one(d) is not None for d in descendants),
+        )
+
+    def find_with_parent(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        parent: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` whose direct parent matches ``parent``.
+
+        ``parent`` is one regex or an iterable of them; every pattern must match
+        the single parent line (logical AND). Implemented with :meth:`find` and
+        a ``where`` predicate.
+        """
+        parents = _as_list(parent)
+        return self.find(
+            pattern,
+            where=lambda node: _parent_matches_all(node, parents),
+        )
+
+    def find_with_ancestor(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        ancestor: Patterns,
+        *,
+        adjacent: bool = False,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` with ``ancestor`` above them.
+
+        ``ancestor`` is one regex or an iterable of them, all required (AND).
+        With ``adjacent=False`` (the default) each pattern must match some
+        ancestor, in any order. With ``adjacent=True`` the patterns must form a
+        consecutive chain matched nearest-first: the first against the direct
+        parent, the next against its parent, and so on. Implemented with
+        :meth:`find` and a ``where`` predicate.
+        """
+        ancestors = _as_list(ancestor)
+        if adjacent:
+            return self.find(
+                pattern,
+                where=lambda node: _adjacent_ancestors(node, ancestors),
+            )
+        return self.find(
+            pattern,
+            where=lambda node: _any_ancestor_each(node, ancestors),
+        )
+
 
 class ConfigNode(_Queryable):
     """One line of configuration and its place in the hierarchy.
@@ -190,5 +271,36 @@ class ConfigNode(_Queryable):
         return f"ConfigNode({self.text!r}, children={len(self.children)})"
 
 
-# A callable that tests a node and returns whether it matches.
-Predicate = Callable[[ConfigNode], bool]
+def _parent_matches_all(
+    node: ConfigNode,
+    patterns: list[str | re.Pattern[str]],
+) -> bool:
+    """Whether the node's direct parent matches every pattern."""
+    parent = node.parent
+    return parent is not None and all(parent.matches(p) for p in patterns)
+
+
+def _adjacent_ancestors(
+    node: ConfigNode,
+    patterns: list[str | re.Pattern[str]],
+) -> bool:
+    """Whether the node's ancestry matches ``patterns`` as a consecutive chain.
+
+    Patterns are matched nearest-first: the first against the node's direct
+    parent, the next against that parent's parent, and so on with no gaps.
+    """
+    current = node.parent
+    for pattern in patterns:
+        if current is None or not current.matches(pattern):
+            return False
+        current = current.parent
+    return True
+
+
+def _any_ancestor_each(
+    node: ConfigNode,
+    patterns: list[str | re.Pattern[str]],
+) -> bool:
+    """Whether every pattern matches some ancestor, in any order."""
+    ancestors = list(node.ancestors)
+    return all(any(ancestor.matches(p) for ancestor in ancestors) for p in patterns)
