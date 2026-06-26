@@ -11,7 +11,7 @@ page covers the full API; the examples assume a parsed `config`.
 optional `where` predicate, or both (combined with **AND**):
 
 ```python
-# By regex (re.search semantics — anchor with ^ when you mean it).
+# By regex (re.search semantics - anchor with ^ when you mean it).
 config.find(r"^interface ")
 
 # By predicate.

@@ -97,19 +97,19 @@ git push origin vX.Y.Z
 After pushing the tag, the release pipeline (`.github/workflows/release.yaml`)
 automatically runs these jobs in order:
 
-1. **Validates the tag** — confirms the tag matches `vX.Y.Z` semver format
-2. **Runs the tests** — the full pytest matrix (Python 3.11–3.13)
-3. **Builds the package** — creates the sdist and wheel via `uv build`, with the version derived from the git tag (hatch-vcs)
-4. **Verifies version consistency** — confirms the built package version matches the tag
-5. **Creates a GitHub Release** — extracts the version's section from `CHANGELOG.md` and publishes it as release notes
-6. **Publishes to PyPI** — uploads `networkconfparse` via Trusted Publishing (see below)
+1. **Validates the tag** - confirms the tag matches `vX.Y.Z` semver format
+2. **Runs the tests** - the full pytest matrix (Python 3.11-3.13)
+3. **Builds the package** - creates the sdist and wheel via `uv build`, with the version derived from the git tag (hatch-vcs)
+4. **Verifies version consistency** - confirms the built package version matches the tag
+5. **Creates a GitHub Release** - extracts the version's section from `CHANGELOG.md` and publishes it as release notes
+6. **Publishes to PyPI** - uploads `networkconfparse` via Trusted Publishing (see below)
 
 Monitor these jobs in the GitHub Actions tab to confirm they all succeed.
 
 ## Version Management
 
 networkconfparse uses [hatch-vcs](https://github.com/ofek/hatch-vcs) for dynamic
-versioning. There is no hardcoded version in `pyproject.toml` — the version is
+versioning. There is no hardcoded version in `pyproject.toml` - the version is
 derived entirely from git tags.
 
 - **Tagged commits** (e.g., `v0.1.0`) produce exact versions: `0.1.0`

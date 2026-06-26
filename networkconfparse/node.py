@@ -225,7 +225,7 @@ class ConfigNode(_Queryable):
 
     @property
     def descendants(self) -> Iterator[ConfigNode]:
-        """Yield every descendant, depth-first — equivalent to `walk`."""
+        """Yield every descendant, depth-first - equivalent to `walk`."""
         return self.walk()
 
     @property

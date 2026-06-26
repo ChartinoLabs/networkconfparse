@@ -30,7 +30,7 @@ following line to the correct ancestor.
 
 Lines whose first non-whitespace character is `!` are comments or section
 delimiters in Cisco platforms. They carry no configuration semantics and are
-**skipped during parsing** — they never become nodes. This is safe because the
+**skipped during parsing** - they never become nodes. This is safe because the
 tree's shape is determined entirely by indentation; a `!` delimiter is redundant
 with the dedent that already closes a block.
 
@@ -44,11 +44,11 @@ indentation-structured and may even look like configuration. The parser
 recognizes these and captures their body verbatim as children of the owning line,
 rather than mistaking the body for real configuration:
 
-- **`banner` blocks** — `banner motd ^C` followed by body text until the
+- **`banner` blocks** - `banner motd ^C` followed by body text until the
   delimiter character reappears. The body (which may contain `!`, blank lines, or
   config-looking text) is attached to the banner node; the closing delimiter is
   dropped.
-- **Inline certificate data** — a `certificate ...` line inside a
+- **Inline certificate data** - a `certificate ...` line inside a
   `crypto pki certificate chain` block, whose hex body runs until a standalone
   `quit`. The hex is attached to the certificate node; `quit` is dropped.
 
