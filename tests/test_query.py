@@ -65,6 +65,55 @@ def test_has_child_predicate() -> None:
     assert not intf.has_child(r"^description ")
 
 
+def test_find_with_predicate() -> None:
+    """``find`` accepts a ``where`` predicate instead of a regex."""
+    config = parse(SAMPLE)
+    leaves = config.find(where=lambda n: not n.children)
+    assert "ip address 10.0.0.1 255.255.255.0" in [n.text for n in leaves]
+    assert "interface GigabitEthernet0/0" not in [n.text for n in leaves]
+
+
+def test_find_combines_pattern_and_predicate() -> None:
+    """``find`` requires both the regex and the predicate to match."""
+    config = parse(SAMPLE)
+    interfaces = config.find(
+        r"^interface ",
+        where=lambda n: n.has_child(r"^ip address "),
+    )
+    assert [n.text for n in interfaces] == [
+        "interface GigabitEthernet0/0",
+        "interface Loopback0",
+    ]
+
+
+def test_find_without_arguments_returns_everything() -> None:
+    """``find`` with no pattern or predicate returns the whole subtree."""
+    config = parse(SAMPLE)
+    assert [n.text for n in config.find()] == [n.text for n in config.walk()]
+
+
+def test_find_one_returns_first_match() -> None:
+    """``find_one`` returns the first matching node in pre-order."""
+    config = parse(SAMPLE)
+    first = config.find_one(r"^ip address ")
+    assert first is not None
+    assert first.text == "ip address 10.0.0.1 255.255.255.0"
+
+
+def test_find_one_returns_none_when_absent() -> None:
+    """``find_one`` returns ``None`` when nothing matches."""
+    config = parse(SAMPLE)
+    assert config.find_one(r"^router bgp ") is None
+
+
+def test_find_child_with_predicate() -> None:
+    """``find_child`` accepts a ``where`` predicate over direct children."""
+    config = parse(SAMPLE)
+    acl = config.find_child(where=lambda n: n.matches(r"NO_TRAILING_DENY"))
+    assert acl is not None
+    assert acl.text == "ip access-list extended NO_TRAILING_DENY"
+
+
 def test_query_interfaces_with_ip_address() -> None:
     """End-to-end: find all interfaces that have an IP address configured."""
     config = parse(SAMPLE)
