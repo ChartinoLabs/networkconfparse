@@ -109,6 +109,7 @@ missing_deny = [
 
 - [Changelog](CHANGELOG.md) - Release history built from changelog fragments
 - [Changelog Fragments Guide](changes/README.md) - How to add release-note fragments
+- [Releasing](RELEASING.md) - How to compile release notes and cut a release
 
 ## Acknowledgments
 
