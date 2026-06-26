@@ -112,7 +112,7 @@ missing_deny = [
 
 ## Acknowledgments
 
-- **Conceptual inspiration** — The idea of modeling a network device configuration as a queryable parent/child tree owes a great deal to [Mike Pennington](https://github.com/mpenning)'s work on [CiscoConfParse](https://github.com/mpenning/ciscoconfparse) and [CiscoConfParse2](https://github.com/mpenning/ciscoconfparse2). networkconfparse is an independent, clean-room implementation; it is not affiliated with, derived from, or endorsed by those projects.
+- **Conceptual inspiration** - The idea of modeling a network device configuration as a queryable parent/child tree owes a great deal to [Mike Pennington](https://github.com/mpenning)'s work on [CiscoConfParse](https://github.com/mpenning/ciscoconfparse) and [CiscoConfParse2](https://github.com/mpenning/ciscoconfparse2). networkconfparse is an independent, clean-room implementation; it is not affiliated with, derived from, or endorsed by those projects.
 
 ## Status
 
