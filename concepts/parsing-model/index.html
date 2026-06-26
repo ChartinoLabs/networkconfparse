@@ -843,6 +843,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -955,7 +982,7 @@ following line to the correct ancestor.</p>
 <h2 id="comment-and-delimiter-lines-are-dropped">Comment and delimiter lines are dropped<a class="headerlink" href="#comment-and-delimiter-lines-are-dropped" title="Permanent link">&para;</a></h2>
 <p>Lines whose first non-whitespace character is <code>!</code> are comments or section
 delimiters in Cisco platforms. They carry no configuration semantics and are
-<strong>skipped during parsing</strong> — they never become nodes. This is safe because the
+<strong>skipped during parsing</strong> - they never become nodes. This is safe because the
 tree's shape is determined entirely by indentation; a <code>!</code> delimiter is redundant
 with the dedent that already closes a block.</p>
 <p>A <code>!</code> that appears <em>within</em> a line (for example <code>description has!bang</code>) is part of
@@ -966,11 +993,11 @@ indentation-structured and may even look like configuration. The parser
 recognizes these and captures their body verbatim as children of the owning line,
 rather than mistaking the body for real configuration:</p>
 <ul>
-<li><strong><code>banner</code> blocks</strong> — <code>banner motd ^C</code> followed by body text until the
+<li><strong><code>banner</code> blocks</strong> - <code>banner motd ^C</code> followed by body text until the
   delimiter character reappears. The body (which may contain <code>!</code>, blank lines, or
   config-looking text) is attached to the banner node; the closing delimiter is
   dropped.</li>
-<li><strong>Inline certificate data</strong> — a <code>certificate ...</code> line inside a
+<li><strong>Inline certificate data</strong> - a <code>certificate ...</code> line inside a
   <code>crypto pki certificate chain</code> block, whose hex body runs until a standalone
   <code>quit</code>. The hex is attached to the certificate node; <code>quit</code> is dropped.</li>
 </ul>
