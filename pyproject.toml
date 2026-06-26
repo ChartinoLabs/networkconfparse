@@ -1,14 +1,30 @@
 [project]
 name = "networkconfparse"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Parse whitespace-based network configuration into a tree of parent/child relationships."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
 
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["networkconfparse"]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "networkconfparse/_version.py"
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.ruff]
+exclude = ["networkconfparse/_version.py"]
 
 [tool.ruff.lint]
 select = [
@@ -31,12 +47,46 @@ convention = "google"
 [tool.ruff.lint.isort]
 combine-as-imports = true
 
+[tool.towncrier]
+directory = "changes"
+filename = "CHANGELOG.md"
+title_format = "## {version} - {project_date}"
+issue_format = "[#{issue}](https://github.com/ChartinoLabs/networkconfparse/pull/{issue})"
+underlines = ["", "", ""]
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Breaking Changes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "internal"
+name = "Internal"
+showcontent = true
+
 [dependency-groups]
 dev = [
     "bandit==1.9.4",
     "pre-commit==4.6.0",
     "pytest==9.1.1",
+    "pytest-cov==7.1.0",
     "ruff==0.15.20",
+    "towncrier==25.8.0",
     "ty==0.0.54",
     "xenon==0.9.3",
 ]
