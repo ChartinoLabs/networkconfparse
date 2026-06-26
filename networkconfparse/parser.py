@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from .config import Config
 from .node import ConfigNode
 
@@ -47,32 +49,83 @@ def _banner_body_delimiter(line: str) -> str | None:
     return delimiter
 
 
-def _consume_banner(
+def _banner_terminator(delimiter: str) -> Callable[[str], str | None]:
+    """Build a block terminator that closes a banner at ``delimiter``."""
+
+    def terminator(line: str) -> str | None:
+        if delimiter in line:
+            return line[: line.index(delimiter)]
+        return None
+
+    return terminator
+
+
+# Inline certificate data appears as a ``certificate <type> <serial>`` line whose
+# hex body, indented beneath it, runs until a standalone ``quit``. The context
+# guard ensures only certificates within a chain trigger body consumption.
+_CERTIFICATE_PREFIX = "certificate "
+_CERTIFICATE_CONTEXT = "certificate chain"
+_CERTIFICATE_TERMINATOR = "quit"
+
+
+def _is_certificate_start(line: str, parent: ConfigNode) -> bool:
+    """Whether ``line`` opens inline certificate data within a cert chain."""
+    in_chain = _CERTIFICATE_CONTEXT in parent.text
+    return in_chain and line.startswith(_CERTIFICATE_PREFIX)
+
+
+def _certificate_terminator(line: str) -> str | None:
+    """Close a certificate block at a standalone ``quit`` line."""
+    if line.strip() == _CERTIFICATE_TERMINATOR:
+        return ""
+    return None
+
+
+def _consume_block(
     lines: list[str],
     start: int,
-    banner: ConfigNode,
-    delimiter: str,
+    parent: ConfigNode,
+    terminator: Callable[[str], str | None],
 ) -> int:
-    """Attach banner body lines as children until ``delimiter``, return next index.
+    """Attach verbatim body lines as children of ``parent`` until ``terminator``.
 
-    Body lines are stored verbatim because their whitespace is content rather
-    than structure. The closing delimiter line is dropped, though any text
-    preceding the delimiter on that line is kept as a final body line.
+    Returns the index of the first line after the block. Body lines are stored
+    verbatim because their whitespace is content rather than structure. The
+    terminator line is dropped, though any body text it carries is kept.
     """
-    body_indent = banner.indent + 1
+    body_indent = parent.indent + 1
     index = start
     while index < len(lines):
         line = lines[index]
-        if delimiter in line:
-            before = line[: line.index(delimiter)]
-            if before:
-                banner.children.append(
-                    ConfigNode(text=before, indent=body_indent, parent=banner)
-                )
+        trailing = terminator(line)
+        if trailing is not None:
+            if trailing:
+                child = ConfigNode(text=trailing, indent=body_indent, parent=parent)
+                parent.children.append(child)
             return index + 1
-        banner.children.append(ConfigNode(text=line, indent=body_indent, parent=banner))
+        child = ConfigNode(text=line, indent=body_indent, parent=parent)
+        parent.children.append(child)
         index += 1
-    return index  # unterminated banner: consumed to end of input
+    return index  # unterminated block: consumed to end of input
+
+
+def _consume_special_block(
+    lines: list[str],
+    index: int,
+    node: ConfigNode,
+    parent: ConfigNode,
+) -> int | None:
+    """Consume a banner or certificate body opened by ``node``, if any.
+
+    Returns the index of the first line after the consumed block, or ``None`` if
+    ``node`` does not open such a block.
+    """
+    delimiter = _banner_body_delimiter(node.text)
+    if delimiter is not None:
+        return _consume_block(lines, index + 1, node, _banner_terminator(delimiter))
+    if _is_certificate_start(node.text, parent):
+        return _consume_block(lines, index + 1, node, _certificate_terminator)
+    return None
 
 
 def parse(text: str) -> Config:
@@ -85,9 +138,10 @@ def parse(text: str) -> Config:
 
     Blank lines and comment/delimiter lines (those beginning with ``!``) are
     skipped, since the latter are redundant with indentation and carry no
-    configuration semantics. Multiline ``banner`` blocks are recognised and
-    their body captured verbatim as children of the banner line, so the freeform
-    body is never mistaken for configuration.
+    configuration semantics. Multiline ``banner`` blocks and inline certificate
+    data (a ``certificate`` line within a ``certificate chain``, ended by
+    ``quit``) are recognised and their bodies captured verbatim as children, so
+    the freeform body is never mistaken for configuration.
 
     Returns a :class:`Config` wrapping the top-level (column 0) lines; each
     line's children are the lines indented beneath it.
@@ -118,11 +172,11 @@ def parse(text: str) -> Config:
         node = ConfigNode(text=stripped, indent=indent, parent=parent)
         parent.children.append(node)
 
-        delimiter = _banner_body_delimiter(stripped)
-        if delimiter is not None:
-            # A banner owns its freeform body, not indentation-based children, so
-            # it is never pushed onto the stack.
-            index = _consume_banner(lines, index + 1, node, delimiter)
+        consumed = _consume_special_block(lines, index, node, parent)
+        if consumed is not None:
+            # Banners and certificate chains own their freeform body, not
+            # indentation-based children, so they are never pushed on the stack.
+            index = consumed
             continue
 
         stack.append(node)
