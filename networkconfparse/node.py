@@ -10,14 +10,14 @@ from .utils import _as_list
 
 
 class _Queryable:
-    """Regex query behaviour shared by :class:`Config` and :class:`ConfigNode`.
+    """Regex query behaviour shared by `Config` and `ConfigNode`.
 
-    Subclasses expose their immediate child nodes via :attr:`_query_nodes`; the
+    Subclasses expose their immediate child nodes via `_query_nodes`; the
     subtree traversal and lookup logic lives here once, so the whole
     configuration and any individual node are queried the same way.
 
     Every lookup accepts an optional ``pattern`` (a regular expression, matched
-    with :meth:`ConfigNode.matches`) and an optional ``where`` predicate. When
+    with `matches`) and an optional ``where`` predicate. When
     both are given a node must satisfy both; when neither is given every node
     matches.
     """
@@ -117,7 +117,7 @@ class _Queryable:
         """Return nodes matching ``pattern`` that have ``child`` as direct children.
 
         ``child`` is one regex or an iterable of them; every pattern must match
-        some direct child (logical AND). Implemented with :meth:`find` and a
+        some direct child (logical AND). Implemented with `find` and a
         ``where`` predicate.
         """
         children = _as_list(child)
@@ -135,7 +135,7 @@ class _Queryable:
 
         ``descendant`` is one regex or an iterable of them; every pattern must
         match some descendant at any depth (logical AND). Implemented with
-        :meth:`find` and a ``where`` predicate.
+        `find` and a ``where`` predicate.
         """
         descendants = _as_list(descendant)
         return self.find(
@@ -151,7 +151,7 @@ class _Queryable:
         """Return nodes matching ``pattern`` whose direct parent matches ``parent``.
 
         ``parent`` is one regex or an iterable of them; every pattern must match
-        the single parent line (logical AND). Implemented with :meth:`find` and
+        the single parent line (logical AND). Implemented with `find` and
         a ``where`` predicate.
         """
         parents = _as_list(parent)
@@ -174,7 +174,7 @@ class _Queryable:
         ancestor, in any order. With ``adjacent=True`` the patterns must form a
         consecutive chain matched nearest-first: the first against the direct
         parent, the next against its parent, and so on. Implemented with
-        :meth:`find` and a ``where`` predicate.
+        `find` and a ``where`` predicate.
         """
         ancestors = _as_list(ancestor)
         if adjacent:
@@ -225,7 +225,7 @@ class ConfigNode(_Queryable):
 
     @property
     def descendants(self) -> Iterator[ConfigNode]:
-        """Yield every descendant, depth-first — equivalent to :meth:`walk`."""
+        """Yield every descendant, depth-first — equivalent to `walk`."""
         return self.walk()
 
     @property
@@ -253,7 +253,7 @@ class ConfigNode(_Queryable):
         """Return whether this node's text matches ``pattern``.
 
         ``pattern`` may be a string (treated as a regular expression) or a
-        pre-compiled pattern. Matching uses :func:`re.search`, so the pattern
+        pre-compiled pattern. Matching uses `re.search`, so the pattern
         need not be anchored to match anywhere in the line.
         """
         return re.search(pattern, self.text) is not None

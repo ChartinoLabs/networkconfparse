@@ -10,9 +10,9 @@ from .node import ConfigNode, _Queryable
 class Config(_Queryable):
     """A parsed configuration: its ordered top-level lines and their subtrees.
 
-    Returned by :func:`networkconfparse.parse`. A configuration owns the
-    top-level lines (those at column 0). :meth:`find` searches the whole tree,
-    while :meth:`find_child` and :meth:`has_child` consider only top-level
+    Returned by `parse`. A configuration owns the
+    top-level lines (those at column 0). `find` searches the whole tree,
+    while `find_child` and `has_child` consider only top-level
     lines.
     """
 

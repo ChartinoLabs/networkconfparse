@@ -86,3 +86,4 @@ nav:
       - parse: reference/parse.md
       - Config: reference/config.md
       - ConfigNode: reference/node.md
+      - Type Aliases: reference/typedefs.md

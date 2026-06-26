@@ -1,4 +1,4 @@
-"""Turn indented configuration text into a :class:`Config` of node trees."""
+"""Turn indented configuration text into a `Config` of node trees."""
 
 from __future__ import annotations
 
@@ -129,7 +129,7 @@ def _consume_special_block(
 
 
 def parse(text: str) -> Config:
-    """Parse whitespace-indented configuration into a :class:`Config`.
+    """Parse whitespace-indented configuration into a `Config`.
 
     The parser is intentionally network-OS agnostic: it makes no assumptions
     about a fixed indent width. A line is a child of the nearest preceding line
@@ -143,7 +143,7 @@ def parse(text: str) -> Config:
     ``quit``) are recognised and their bodies captured verbatim as children, so
     the freeform body is never mistaken for configuration.
 
-    Returns a :class:`Config` wrapping the top-level (column 0) lines; each
+    Returns a `Config` wrapping the top-level (column 0) lines; each
     line's children are the lines indented beneath it.
     """
     # A throwaway sentinel anchors the parent stack during construction so that
