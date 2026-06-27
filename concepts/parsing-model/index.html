@@ -731,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/parse/" class="md-nav__link">
+      <a href="../../reference/parser/" class="md-nav__link">
         
   
   
@@ -964,7 +964,7 @@
 <p>Understanding how networkconfparse turns text into a tree makes the query API
 predictable. This page describes that model.</p>
 <h2 id="lines-become-a-tree">Lines become a tree<a class="headerlink" href="#lines-become-a-tree" title="Permanent link">&para;</a></h2>
-<p><a href="../../reference/parse/"><code>parse</code></a> reads the configuration line by line and builds a
+<p><a href="../../reference/parser/"><code>parse</code></a> reads the configuration line by line and builds a
 tree of <a href="../../reference/node/"><code>ConfigNode</code></a> objects. A line is a <strong>child</strong> of the
 nearest preceding line with <em>strictly less</em> indentation. The top-level (column 0)
 lines become the children of the returned <a href="../../reference/config/"><code>Config</code></a>.</p>

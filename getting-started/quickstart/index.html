@@ -731,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/parse/" class="md-nav__link">
+      <a href="../../reference/parser/" class="md-nav__link">
         
   
   
@@ -962,7 +962,7 @@
 
 <h1 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h1>
 <h2 id="parse-a-configuration">Parse a configuration<a class="headerlink" href="#parse-a-configuration" title="Permanent link">&para;</a></h2>
-<p>Call <a href="../../reference/parse/"><code>parse</code></a> with the configuration text. It returns a
+<p>Call <a href="../../reference/parser/"><code>parse</code></a> with the configuration text. It returns a
 <a href="../../reference/config/"><code>Config</code></a> whose top-level lines each carry their indented
 children as a tree of <a href="../../reference/node/"><code>ConfigNode</code></a> objects. Comment and
 delimiter lines (<code>!</code>) are dropped automatically.</p>
@@ -1038,7 +1038,7 @@ text string. It dispatches on the type of its argument:</p>
 <p>A bare string containing a newline can never be a path, so it is always parsed
 as text. The rare footgun is a single-line config that happens to match an
 existing filename: it will be read as that file. To force literal-text
-interpretation, append a trailing newline. See the <a href="../../reference/parse/"><code>parse</code>
+interpretation, append a trailing newline. See the <a href="../../reference/parser/"><code>parse</code>
 reference</a> for the full string-tasting rule.</p>
 <div class="admonition warning">
 <p class="admonition-title">Do not taste untrusted strings</p>

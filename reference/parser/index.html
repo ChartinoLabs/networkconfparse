@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://chartinolabs.github.io/networkconfparse/reference/parse/">
+        <link rel="canonical" href="https://chartinolabs.github.io/networkconfparse/reference/parser/">
       
       
         <link rel="prev" href="../../guide/querying/">
@@ -700,7 +700,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#networkconfparse.parse" class="md-nav__link">
+  <a href="#networkconfparse.parser.parse" class="md-nav__link">
     <span class="md-ellipsis">
       
         parse
@@ -864,7 +864,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#networkconfparse.parse" class="md-nav__link">
+  <a href="#networkconfparse.parser.parse" class="md-nav__link">
     <span class="md-ellipsis">
       
         parse
@@ -895,39 +895,88 @@
 
 
 <h1 id="parse"><code>parse</code><a class="headerlink" href="#parse" title="Permanent link">&para;</a></h1>
-<p>The entry point that turns configuration text into a <a href="../config/"><code>Config</code></a> tree.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+        <p>Turn indented configuration text into a <code>Config</code> of node trees.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 
 <div class="doc doc-object doc-function">
 
 
-<h2 id="networkconfparse.parse" class="doc doc-heading">
+<h2 id="networkconfparse.parser.parse" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">parse</span>
 
 
-<a href="#networkconfparse.parse" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#networkconfparse.parser.parse" class="headerlink" title="Permanent link">&para;</a></h2>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">parse</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="ConfigSource
 
 
   
       module-attribute
-   (networkconfparse.typedefs.ConfigSource)" href="../typedefs/#networkconfparse.typedefs.ConfigSource">ConfigSource</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="Config (networkconfparse.config.Config)" href="../config/#networkconfparse.Config">Config</a></span>
+   (networkconfparse.typedefs.ConfigSource)" href="../typedefs/#networkconfparse.typedefs.ConfigSource">ConfigSource</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="Config (networkconfparse.config.Config)" href="../config/#networkconfparse.config.Config">Config</a></span>
 </code></pre></div>
 
-    <div class="doc doc-contents first">
+    <div class="doc doc-contents ">
 
         <p>Parse whitespace-indented configuration into a <code>Config</code>.</p>
 <p>The single entry point accepts the input forms callers commonly have on
 hand, dispatching on the type of <code>source</code>:</p>
-<p>===========================================  ===============================
-Input                                        Interpretation
-===========================================  ===============================
-<code>str</code> containing a newline (<code>\n</code>/<code>\r</code>)   literal configuration text
-<code>str</code> without a newline                    tasted as a path (see below)
-<code>pathlib.Path</code>                               always a filesystem path
-file-like object (has <code>.read()</code>)           its contents are read
-iterable of <code>str</code> (list/tuple/generator)   joined as lines
-===========================================  ===============================</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code> containing a newline (<code>\n</code>/<code>\r</code>)</td>
+<td>literal configuration text</td>
+</tr>
+<tr>
+<td><code>str</code> without a newline</td>
+<td>tasted as a path (see below)</td>
+</tr>
+<tr>
+<td><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path"><code>pathlib.Path</code></a></td>
+<td>always a filesystem path</td>
+</tr>
+<tr>
+<td>file-like object (has <code>.read()</code>)</td>
+<td>its contents are read</td>
+</tr>
+<tr>
+<td>iterable of <code>str</code> (list/tuple/generator)</td>
+<td>joined as lines</td>
+</tr>
+</tbody>
+</table>
 <p>String tasting: a bare <code>str</code> containing a newline cannot be a path, so it
 is always configuration text. A newline-free <code>str</code> is checked against the
 filesystem - if it resolves to an existing file, that file is read (as
@@ -936,16 +985,19 @@ Tasting is exception-safe and only an existing file triggers a read, so a
 directory name falls back to text. As a documented footgun, a single-line
 config that happens to match an existing filename will be read as that file;
 to force literal-text interpretation, append a trailing newline. A
-<code>pathlib.Path</code> is an explicit path signal and never falls back: a missing
-path raises <code>FileNotFoundError</code>.</p>
-<p>.. warning::</p>
+<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path"><code>pathlib.Path</code></a> is an explicit path signal and never falls
+back: a missing path raises <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError"><code>FileNotFoundError</code></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>Because tasting can read a file from a bare <code>str</code>, do not pass an
-   <strong>untrusted</strong> string to <code>parse</code>: an attacker who controls the input
-   could supply a path (for example <code>/etc/passwd</code>) and have its contents
-   read and returned through the parsed tree. When the source is untrusted,
-   guarantee text interpretation by ensuring it contains a newline (append
-   <code>"\n"</code> to a single-line value), or wrap it explicitly with
-   <code>io.StringIO</code> before calling <code>parse</code>.</p>
+<strong>untrusted</strong> string to <a class="autorefs autorefs-internal" title="parse" href="#networkconfparse.parser.parse"><code>parse</code></a>: an attacker
+who controls the input could supply a path (for example <code>/etc/passwd</code>)
+and have its contents read and returned through the parsed tree. When
+the source is untrusted, guarantee text interpretation by ensuring it
+contains a newline (append <code>"\n"</code> to a single-line value), or wrap it
+explicitly with <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/io.html#io.StringIO"><code>io.StringIO</code></a> before calling
+<a class="autorefs autorefs-internal" title="parse" href="#networkconfparse.parser.parse"><code>parse</code></a>.</p>
+</div>
 <p>The parser itself is network-OS agnostic: it makes no assumptions about a
 fixed indent width. A line is a child of the nearest preceding line with
 strictly less indentation, which handles IOS (1 space), NX-OS (2 spaces),
@@ -953,11 +1005,11 @@ and inconsistent indentation alike.</p>
 <p>Blank lines and comment/delimiter lines (those beginning with <code>!</code>) are
 skipped, since the latter are redundant with indentation and carry no
 configuration semantics. Multiline <code>banner</code> blocks and inline certificate
-data (a <code>certificate</code> line within a <code>certificate chain</code>, ended by
-<code>quit</code>) are recognised and their bodies captured verbatim as children, so
-the freeform body is never mistaken for configuration.</p>
-<p>Returns a <code>Config</code> wrapping the top-level (column 0) lines; each
-line's children are the lines indented beneath it.</p>
+data (a <code>certificate</code> line within a <code>certificate chain</code>, ended by <code>quit</code>)
+are recognised and their bodies captured verbatim as children, so the
+freeform body is never mistaken for configuration.</p>
+<p>Returns a <a class="autorefs autorefs-internal" title="Config" href="../config/#networkconfparse.config.Config"><code>Config</code></a> wrapping the top-level
+(column 0) lines; each line's children are the lines indented beneath it.</p>
 
 
             <details class="mkdocstrings-source">
@@ -1013,62 +1065,68 @@ line's children are the lines indented beneath it.</p>
 <span class="normal"><a href="#__codelineno-0-237">237</a></span>
 <span class="normal"><a href="#__codelineno-0-238">238</a></span>
 <span class="normal"><a href="#__codelineno-0-239">239</a></span>
-<span class="normal"><a href="#__codelineno-0-240">240</a></span>
-<span class="normal"><a href="#__codelineno-0-241">241</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">ConfigSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-240">240</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">ConfigSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse whitespace-indented configuration into a `Config`.</span>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="sd">    The single entry point accepts the input forms callers commonly have on</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    hand, dispatching on the type of ``source``:</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    hand, dispatching on the type of `source`:</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    ===========================================  ===============================</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    Input                                        Interpretation</span>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    ===========================================  ===============================</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    ``str`` containing a newline (``\n``/``\r``)   literal configuration text</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    ``str`` without a newline                    tasted as a path (see below)</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    `pathlib.Path`                               always a filesystem path</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    file-like object (has ``.read()``)           its contents are read</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    iterable of ``str`` (list/tuple/generator)   joined as lines</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    ===========================================  ===============================</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    String tasting: a bare ``str`` containing a newline cannot be a path, so it</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    is always configuration text. A newline-free ``str`` is checked against the</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">    filesystem - if it resolves to an existing file, that file is read (as</span>
-<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    UTF-8); otherwise it is parsed as (unusual, single-line) configuration text.</span>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">    Tasting is exception-safe and only an existing file triggers a read, so a</span>
-<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    directory name falls back to text. As a documented footgun, a single-line</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    config that happens to match an existing filename will be read as that file;</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    to force literal-text interpretation, append a trailing newline. A</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    `pathlib.Path` is an explicit path signal and never falls back: a missing</span>
-<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    path raises ``FileNotFoundError``.</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    | Input                                       | Interpretation               |</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    | ------------------------------------------- | ---------------------------- |</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    | `str` containing a newline (`\n`/`\r`)      | literal configuration text   |</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    | `str` without a newline                     | tasted as a path (see below) |</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    | [`pathlib.Path`][pathlib.Path]              | always a filesystem path     |</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    | file-like object (has `.read()`)            | its contents are read        |</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    | iterable of `str` (list/tuple/generator)    | joined as lines              |</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    String tasting: a bare `str` containing a newline cannot be a path, so it</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    is always configuration text. A newline-free `str` is checked against the</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    filesystem - if it resolves to an existing file, that file is read (as</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    UTF-8); otherwise it is parsed as (unusual, single-line) configuration text.</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">    Tasting is exception-safe and only an existing file triggers a read, so a</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    directory name falls back to text. As a documented footgun, a single-line</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">    config that happens to match an existing filename will be read as that file;</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    to force literal-text interpretation, append a trailing newline. A</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    [`pathlib.Path`][pathlib.Path] is an explicit path signal and never falls</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    back: a missing path raises [`FileNotFoundError`][FileNotFoundError].</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    !!! warning</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a>
-<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">    .. warning::</span>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a>
-<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">       Because tasting can read a file from a bare ``str``, do not pass an</span>
-<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">       **untrusted** string to ``parse``: an attacker who controls the input</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">       could supply a path (for example ``/etc/passwd``) and have its contents</span>
-<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">       read and returned through the parsed tree. When the source is untrusted,</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">       guarantee text interpretation by ensuring it contains a newline (append</span>
-<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">       ``&quot;\n&quot;`` to a single-line value), or wrap it explicitly with</span>
-<a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">       `io.StringIO` before calling ``parse``.</span>
-<a id="__codelineno-0-225" name="__codelineno-0-225"></a>
-<a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">    The parser itself is network-OS agnostic: it makes no assumptions about a</span>
-<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    fixed indent width. A line is a child of the nearest preceding line with</span>
-<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">    strictly less indentation, which handles IOS (1 space), NX-OS (2 spaces),</span>
-<a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    and inconsistent indentation alike.</span>
-<a id="__codelineno-0-230" name="__codelineno-0-230"></a>
-<a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="sd">    Blank lines and comment/delimiter lines (those beginning with ``!``) are</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="sd">    skipped, since the latter are redundant with indentation and carry no</span>
-<a id="__codelineno-0-233" name="__codelineno-0-233"></a><span class="sd">    configuration semantics. Multiline ``banner`` blocks and inline certificate</span>
-<a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="sd">    data (a ``certificate`` line within a ``certificate chain``, ended by</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="sd">    ``quit``) are recognised and their bodies captured verbatim as children, so</span>
-<a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="sd">    the freeform body is never mistaken for configuration.</span>
-<a id="__codelineno-0-237" name="__codelineno-0-237"></a>
-<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    Returns a `Config` wrapping the top-level (column 0) lines; each</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    line&#39;s children are the lines indented beneath it.</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="k">return</span> <span class="n">_parse_text</span><span class="p">(</span><span class="n">_coerce_to_text</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">        Because tasting can read a file from a bare `str`, do not pass an</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">        **untrusted** string to [`parse`][networkconfparse.parse]: an attacker</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">        who controls the input could supply a path (for example `/etc/passwd`)</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">        and have its contents read and returned through the parsed tree. When</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">        the source is untrusted, guarantee text interpretation by ensuring it</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">        contains a newline (append `&quot;\n&quot;` to a single-line value), or wrap it</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">        explicitly with [`io.StringIO`][io.StringIO] before calling</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">        [`parse`][networkconfparse.parse].</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">    The parser itself is network-OS agnostic: it makes no assumptions about a</span>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">    fixed indent width. A line is a child of the nearest preceding line with</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    strictly less indentation, which handles IOS (1 space), NX-OS (2 spaces),</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">    and inconsistent indentation alike.</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="sd">    Blank lines and comment/delimiter lines (those beginning with `!`) are</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="sd">    skipped, since the latter are redundant with indentation and carry no</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="sd">    configuration semantics. Multiline `banner` blocks and inline certificate</span>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a><span class="sd">    data (a `certificate` line within a `certificate chain`, ended by `quit`)</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="sd">    are recognised and their bodies captured verbatim as children, so the</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="sd">    freeform body is never mistaken for configuration.</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">    Returns a [`Config`][networkconfparse.Config] wrapping the top-level</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    (column 0) lines; each line&#39;s children are the lines indented beneath it.</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>    <span class="k">return</span> <span class="n">_parse_text</span><span class="p">(</span><span class="n">_coerce_to_text</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
             </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
     </div>
 
 </div>
