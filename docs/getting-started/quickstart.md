@@ -2,7 +2,7 @@
 
 ## Parse a configuration
 
-Call [`parse`](../reference/parse.md) with the configuration text. It returns a
+Call [`parse`](../reference/parser.md) with the configuration text. It returns a
 [`Config`](../reference/config.md) whose top-level lines each carry their indented
 children as a tree of [`ConfigNode`](../reference/node.md) objects. Comment and
 delimiter lines (`!`) are dropped automatically.
@@ -66,7 +66,7 @@ A bare string containing a newline can never be a path, so it is always parsed
 as text. The rare footgun is a single-line config that happens to match an
 existing filename: it will be read as that file. To force literal-text
 interpretation, append a trailing newline. See the [`parse`
-reference](../reference/parse.md) for the full string-tasting rule.
+reference](../reference/parser.md) for the full string-tasting rule.
 
 !!! warning "Do not taste untrusted strings"
 

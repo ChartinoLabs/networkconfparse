@@ -37,4 +37,4 @@ config.find_with_child(r"^interface ", r"^ip address ")
 - [Quick Start](getting-started/quickstart.md) - parse a config and run your first queries.
 - [Parsing Model](concepts/parsing-model.md) - how the tree is built, and how comments, banners, and certificates are handled.
 - [Querying](guide/querying.md) - the full query API, in depth.
-- [API Reference](reference/parse.md) - generated from the source.
+- [API Reference](reference/parser.md) - generated from the source.

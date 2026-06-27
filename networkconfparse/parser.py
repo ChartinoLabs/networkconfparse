@@ -190,53 +190,52 @@ def parse(source: ConfigSource) -> Config:
     r"""Parse whitespace-indented configuration into a `Config`.
 
     The single entry point accepts the input forms callers commonly have on
-    hand, dispatching on the type of ``source``:
+    hand, dispatching on the type of `source`:
 
-    ===========================================  ===============================
-    Input                                        Interpretation
-    ===========================================  ===============================
-    ``str`` containing a newline (``\n``/``\r``)   literal configuration text
-    ``str`` without a newline                    tasted as a path (see below)
-    `pathlib.Path`                               always a filesystem path
-    file-like object (has ``.read()``)           its contents are read
-    iterable of ``str`` (list/tuple/generator)   joined as lines
-    ===========================================  ===============================
+    | Input                                       | Interpretation               |
+    | ------------------------------------------- | ---------------------------- |
+    | `str` containing a newline (`\n`/`\r`)      | literal configuration text   |
+    | `str` without a newline                     | tasted as a path (see below) |
+    | [`pathlib.Path`][pathlib.Path]              | always a filesystem path     |
+    | file-like object (has `.read()`)            | its contents are read        |
+    | iterable of `str` (list/tuple/generator)    | joined as lines              |
 
-    String tasting: a bare ``str`` containing a newline cannot be a path, so it
-    is always configuration text. A newline-free ``str`` is checked against the
+    String tasting: a bare `str` containing a newline cannot be a path, so it
+    is always configuration text. A newline-free `str` is checked against the
     filesystem - if it resolves to an existing file, that file is read (as
     UTF-8); otherwise it is parsed as (unusual, single-line) configuration text.
     Tasting is exception-safe and only an existing file triggers a read, so a
     directory name falls back to text. As a documented footgun, a single-line
     config that happens to match an existing filename will be read as that file;
     to force literal-text interpretation, append a trailing newline. A
-    `pathlib.Path` is an explicit path signal and never falls back: a missing
-    path raises ``FileNotFoundError``.
+    [`pathlib.Path`][pathlib.Path] is an explicit path signal and never falls
+    back: a missing path raises [`FileNotFoundError`][FileNotFoundError].
 
-    .. warning::
+    !!! warning
 
-       Because tasting can read a file from a bare ``str``, do not pass an
-       **untrusted** string to ``parse``: an attacker who controls the input
-       could supply a path (for example ``/etc/passwd``) and have its contents
-       read and returned through the parsed tree. When the source is untrusted,
-       guarantee text interpretation by ensuring it contains a newline (append
-       ``"\n"`` to a single-line value), or wrap it explicitly with
-       `io.StringIO` before calling ``parse``.
+        Because tasting can read a file from a bare `str`, do not pass an
+        **untrusted** string to [`parse`][networkconfparse.parse]: an attacker
+        who controls the input could supply a path (for example `/etc/passwd`)
+        and have its contents read and returned through the parsed tree. When
+        the source is untrusted, guarantee text interpretation by ensuring it
+        contains a newline (append `"\n"` to a single-line value), or wrap it
+        explicitly with [`io.StringIO`][io.StringIO] before calling
+        [`parse`][networkconfparse.parse].
 
     The parser itself is network-OS agnostic: it makes no assumptions about a
     fixed indent width. A line is a child of the nearest preceding line with
     strictly less indentation, which handles IOS (1 space), NX-OS (2 spaces),
     and inconsistent indentation alike.
 
-    Blank lines and comment/delimiter lines (those beginning with ``!``) are
+    Blank lines and comment/delimiter lines (those beginning with `!`) are
     skipped, since the latter are redundant with indentation and carry no
-    configuration semantics. Multiline ``banner`` blocks and inline certificate
-    data (a ``certificate`` line within a ``certificate chain``, ended by
-    ``quit``) are recognised and their bodies captured verbatim as children, so
-    the freeform body is never mistaken for configuration.
+    configuration semantics. Multiline `banner` blocks and inline certificate
+    data (a `certificate` line within a `certificate chain`, ended by `quit`)
+    are recognised and their bodies captured verbatim as children, so the
+    freeform body is never mistaken for configuration.
 
-    Returns a `Config` wrapping the top-level (column 0) lines; each
-    line's children are the lines indented beneath it.
+    Returns a [`Config`][networkconfparse.Config] wrapping the top-level
+    (column 0) lines; each line's children are the lines indented beneath it.
     """
     return _parse_text(_coerce_to_text(source))
 
