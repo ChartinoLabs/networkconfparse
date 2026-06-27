@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from pathlib import Path
 
 from .config import Config
 from .node import ConfigNode
+from .typedefs import ConfigSource
 
 
 def _leading_spaces(line: str) -> int:
@@ -128,13 +130,103 @@ def _consume_special_block(
     return None
 
 
-def parse(text: str) -> Config:
-    """Parse whitespace-indented configuration into a `Config`.
+_NEWLINES = ("\n", "\r")
 
-    The parser is intentionally network-OS agnostic: it makes no assumptions
-    about a fixed indent width. A line is a child of the nearest preceding line
-    with strictly less indentation, which handles IOS (1 space), NX-OS (2
-    spaces), and inconsistent indentation alike.
+
+def _taste_string(text: str) -> str:
+    """Resolve a bare ``str`` to configuration text, reading it as a file if apt.
+
+    A string containing a newline cannot be a filesystem path, so it is always
+    returned unchanged as configuration text. A newline-free string is "tasted"
+    against the filesystem: if it names an existing file, that file's UTF-8
+    contents are returned; otherwise the string itself is returned as (unusual,
+    single-line) configuration text.
+
+    Tasting is exception-safe: any error from path handling (for example an
+    over-long string raising ``OSError`` or an embedded null raising
+    ``ValueError``) falls back to treating the input as configuration text.
+    """
+    if any(newline in text for newline in _NEWLINES):
+        return text
+    try:
+        candidate = Path(text)
+        if candidate.is_file():
+            return candidate.read_text(encoding="utf-8")
+    except (OSError, ValueError):
+        pass  # not a usable path: fall back to treating the input as text
+    return text
+
+
+def _line_to_text(line: str | bytes) -> str:
+    """Normalise one line from an iterable to terminator-free text."""
+    if isinstance(line, bytes):
+        line = line.decode("utf-8")
+    return line.rstrip("\r\n")
+
+
+def _coerce_to_text(source: ConfigSource) -> str:
+    """Reduce any accepted input form to a single configuration-text string.
+
+    See `parse` for the dispatch table and the string-tasting rule.
+    """
+    if isinstance(source, Path):
+        # An explicit Path is an unambiguous "this is a path" signal: it does
+        # not fall back to text, so a missing path raises FileNotFoundError.
+        return source.read_text(encoding="utf-8")
+    if isinstance(source, str):
+        return _taste_string(source)
+    read = getattr(source, "read", None)
+    if callable(read):  # file-like object
+        contents = read()
+        if isinstance(contents, bytes):
+            return contents.decode("utf-8")
+        return contents
+    # Iterable of lines: join them, dropping any per-line terminators so that
+    # both bare lines and ``readlines()`` output yield the same configuration.
+    return "\n".join(_line_to_text(line) for line in source)
+
+
+def parse(source: ConfigSource) -> Config:
+    r"""Parse whitespace-indented configuration into a `Config`.
+
+    The single entry point accepts the input forms callers commonly have on
+    hand, dispatching on the type of ``source``:
+
+    ===========================================  ===============================
+    Input                                        Interpretation
+    ===========================================  ===============================
+    ``str`` containing a newline (``\n``/``\r``)   literal configuration text
+    ``str`` without a newline                    tasted as a path (see below)
+    `pathlib.Path`                               always a filesystem path
+    file-like object (has ``.read()``)           its contents are read
+    iterable of ``str`` (list/tuple/generator)   joined as lines
+    ===========================================  ===============================
+
+    String tasting: a bare ``str`` containing a newline cannot be a path, so it
+    is always configuration text. A newline-free ``str`` is checked against the
+    filesystem - if it resolves to an existing file, that file is read (as
+    UTF-8); otherwise it is parsed as (unusual, single-line) configuration text.
+    Tasting is exception-safe and only an existing file triggers a read, so a
+    directory name falls back to text. As a documented footgun, a single-line
+    config that happens to match an existing filename will be read as that file;
+    to force literal-text interpretation, append a trailing newline. A
+    `pathlib.Path` is an explicit path signal and never falls back: a missing
+    path raises ``FileNotFoundError``.
+
+    .. warning::
+
+       Because tasting can read a file from a bare ``str``, do not pass an
+       **untrusted** string to ``parse``: an attacker who controls the input
+       could supply a path (for example ``/etc/passwd``) and have its contents
+       read and returned through the parsed tree. When the source is untrusted,
+       guarantee text interpretation by ensuring it contains a newline (append
+       ``"\n"`` to a single-line value), or wrap it explicitly with
+       `io.StringIO` before calling ``parse``.
+
+    The parser itself is network-OS agnostic: it makes no assumptions about a
+    fixed indent width. A line is a child of the nearest preceding line with
+    strictly less indentation, which handles IOS (1 space), NX-OS (2 spaces),
+    and inconsistent indentation alike.
 
     Blank lines and comment/delimiter lines (those beginning with ``!``) are
     skipped, since the latter are redundant with indentation and carry no
@@ -146,6 +238,11 @@ def parse(text: str) -> Config:
     Returns a `Config` wrapping the top-level (column 0) lines; each
     line's children are the lines indented beneath it.
     """
+    return _parse_text(_coerce_to_text(source))
+
+
+def _parse_text(text: str) -> Config:
+    """Build the node tree from already-resolved configuration text."""
     # A throwaway sentinel anchors the parent stack during construction so that
     # top-level lines have something to attach to. It is never exposed: its
     # children are detached into the returned Config below.

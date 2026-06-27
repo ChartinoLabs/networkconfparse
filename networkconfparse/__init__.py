@@ -3,5 +3,6 @@
 from .config import Config
 from .node import ConfigNode
 from .parser import parse
+from .typedefs import ConfigSource
 
-__all__ = ["Config", "ConfigNode", "parse"]
+__all__ = ["Config", "ConfigNode", "ConfigSource", "parse"]

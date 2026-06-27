@@ -29,6 +29,54 @@ interface GigabitEthernet0/0 -> ['ip address 10.0.0.1 255.255.255.0', 'no shutdo
 interface GigabitEthernet0/1 -> ['shutdown']
 ```
 
+## Parse from a file, path, or lines
+
+`parse()` is the single entry point for every common starting point, not just a
+text string. It dispatches on the type of its argument:
+
+| Input                                      | Interpretation                          |
+| ------------------------------------------ | --------------------------------------- |
+| `str` containing a newline                 | literal configuration text              |
+| `str` without a newline                    | tasted as a path, else literal text     |
+| `pathlib.Path`                             | always a filesystem path                |
+| file-like object (has `.read()`)           | its contents are read                   |
+| iterable of `str` (list/tuple/generator)   | joined as lines                         |
+
+```python
+from pathlib import Path
+
+import networkconfparse
+
+# An explicit Path always reads the file (and raises if it is missing).
+config = networkconfparse.parse(Path("/etc/configs/router1.cfg"))
+
+# An open file object is read directly.
+with open("/etc/configs/router1.cfg") as handle:
+    config = networkconfparse.parse(handle)
+
+# An already-split list of lines is joined and parsed.
+config = networkconfparse.parse(["interface GigabitEthernet0/0", " shutdown"])
+
+# A bare string is "tasted": if it names an existing file it is read,
+# otherwise it is parsed as configuration text.
+config = networkconfparse.parse("router1.cfg")
+```
+
+A bare string containing a newline can never be a path, so it is always parsed
+as text. The rare footgun is a single-line config that happens to match an
+existing filename: it will be read as that file. To force literal-text
+interpretation, append a trailing newline. See the [`parse`
+reference](../reference/parse.md) for the full string-tasting rule.
+
+!!! warning "Do not taste untrusted strings"
+
+    Because a bare string can be read as a file, never pass an untrusted string
+    to `parse()`. An attacker who controls the input could supply a path such as
+    `/etc/passwd` and have its contents read back through the parsed tree. When
+    the source is untrusted, guarantee text interpretation by ensuring it
+    contains a newline (append `"\n"` to a single-line value), or wrap it in
+    `io.StringIO` first.
+
 ## Run a query
 
 `find()` searches the whole tree and accepts a regular expression, a `where`

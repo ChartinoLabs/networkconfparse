@@ -1,0 +1,1 @@
+`parse()` now accepts a filesystem path (`str` or `pathlib.Path`), an open file-like object, or an iterable of lines in addition to a configuration string, dispatching on the input so callers no longer have to read and join their config into one string first.
