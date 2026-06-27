@@ -2,6 +2,6 @@
 
 from .config import Config
 from .node import ConfigNode
-from .parser import parse
+from .parser import ConfigSource, parse
 
-__all__ = ["Config", "ConfigNode", "parse"]
+__all__ = ["Config", "ConfigNode", "ConfigSource", "parse"]
