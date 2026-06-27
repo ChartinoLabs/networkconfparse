@@ -187,6 +187,91 @@ class _Queryable:
             where=lambda node: _any_ancestor_each(node, ancestors),
         )
 
+    def find_without_child(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        child: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` that lack every ``child`` pattern.
+
+        The negative counterpart of `find_with_child`. ``child`` is one regex
+        or an iterable of them; a node matches when **none** of them match any
+        direct child (the "none present" / NOR rule). For ``[a, b]`` a node
+        qualifies only if it has no direct child matching ``a`` and none
+        matching ``b`` - so a node carrying just one of them is excluded.
+        Implemented with `find` and a ``where`` predicate.
+        """
+        children = _as_list(child)
+        return self.find(
+            pattern,
+            where=lambda node: not any(node.has_child(c) for c in children),
+        )
+
+    def find_without_descendant(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        descendant: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` with none of ``descendant`` below.
+
+        The negative counterpart of `find_with_descendant`. ``descendant`` is
+        one regex or an iterable of them; a node matches when **none** of them
+        match any descendant at any depth (the "none present" / NOR rule). For
+        ``[a, b]`` a node carrying just one of the two below it is excluded.
+        Implemented with `find` and a ``where`` predicate.
+        """
+        descendants = _as_list(descendant)
+        return self.find(
+            pattern,
+            where=lambda node: (
+                not any(node.find_one(d) is not None for d in descendants)
+            ),
+        )
+
+    def find_without_parent(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        parent: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` whose parent matches no ``parent``.
+
+        The negative counterpart of `find_with_parent`. ``parent`` is one regex
+        or an iterable of them; a node matches when its direct parent matches
+        **none** of them (the "none present" / NOR rule). A top-level node has
+        no parent, so it can never sit beneath a matching one and always
+        qualifies. For ``[a, b]`` a node whose parent matches just one of the
+        two is excluded. Implemented with `find` and a ``where`` predicate.
+        """
+        parents = _as_list(parent)
+        return self.find(
+            pattern,
+            where=lambda node: _parent_matches_none(node, parents),
+        )
+
+    def find_without_ancestor(
+        self,
+        pattern: str | re.Pattern[str] | None,
+        ancestor: Patterns,
+    ) -> list[ConfigNode]:
+        """Return nodes matching ``pattern`` with none of ``ancestor`` above.
+
+        The negative counterpart of `find_with_ancestor`. ``ancestor`` is one
+        regex or an iterable of them; a node matches when **none** of them
+        match any ancestor at any depth (the "none present" / NOR rule). A
+        top-level node has no ancestors and always qualifies. For ``[a, b]`` a
+        node with just one of the two anywhere above it is excluded.
+
+        Unlike `find_with_ancestor`, this takes no ``adjacent`` flag: negating
+        an adjacent-chain match is rarely meaningful, so the only negative
+        offered is "none of these appear anywhere in the ancestry." Implemented
+        with `find` and a ``where`` predicate.
+        """
+        ancestors = _as_list(ancestor)
+        return self.find(
+            pattern,
+            where=lambda node: _no_ancestor_matches(node, ancestors),
+        )
+
 
 class ConfigNode(_Queryable):
     """One line of configuration and its place in the hierarchy.
@@ -278,6 +363,30 @@ def _parent_matches_all(
     """Whether the node's direct parent matches every pattern."""
     parent = node.parent
     return parent is not None and all(parent.matches(p) for p in patterns)
+
+
+def _parent_matches_none(
+    node: ConfigNode,
+    patterns: list[str | re.Pattern[str]],
+) -> bool:
+    """Whether the node's direct parent matches no pattern.
+
+    A top-level node has no parent and so matches none of them vacuously.
+    """
+    parent = node.parent
+    return parent is None or not any(parent.matches(p) for p in patterns)
+
+
+def _no_ancestor_matches(
+    node: ConfigNode,
+    patterns: list[str | re.Pattern[str]],
+) -> bool:
+    """Whether no ancestor at any depth matches any pattern.
+
+    A top-level node has no ancestors and so matches none of them vacuously.
+    """
+    ancestors = list(node.ancestors)
+    return not any(ancestor.matches(p) for ancestor in ancestors for p in patterns)
 
 
 def _adjacent_ancestors(
