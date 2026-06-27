@@ -444,6 +444,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#parse-from-a-file-path-or-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parse from a file, path, or lines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-a-query" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -897,6 +908,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#parse-from-a-file-path-or-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parse from a file, path, or lines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-a-query" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -962,23 +984,88 @@ delimiter lines (<code>!</code>) are dropped automatically.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>interface GigabitEthernet0/0 -&gt; [&#39;ip address 10.0.0.1 255.255.255.0&#39;, &#39;no shutdown&#39;]
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>interface GigabitEthernet0/1 -&gt; [&#39;shutdown&#39;]
 </code></pre></div>
+<h2 id="parse-from-a-file-path-or-lines">Parse from a file, path, or lines<a class="headerlink" href="#parse-from-a-file-path-or-lines" title="Permanent link">&para;</a></h2>
+<p><code>parse()</code> is the single entry point for every common starting point, not just a
+text string. It dispatches on the type of its argument:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str</code> containing a newline</td>
+<td>literal configuration text</td>
+</tr>
+<tr>
+<td><code>str</code> without a newline</td>
+<td>tasted as a path, else literal text</td>
+</tr>
+<tr>
+<td><code>pathlib.Path</code></td>
+<td>always a filesystem path</td>
+</tr>
+<tr>
+<td>file-like object (has <code>.read()</code>)</td>
+<td>its contents are read</td>
+</tr>
+<tr>
+<td>iterable of <code>str</code> (list/tuple/generator)</td>
+<td>joined as lines</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">networkconfparse</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># An explicit Path always reads the file (and raises if it is missing).</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">config</span> <span class="o">=</span> <span class="n">networkconfparse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/etc/configs/router1.cfg&quot;</span><span class="p">))</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># An open file object is read directly.</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/etc/configs/router1.cfg&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">config</span> <span class="o">=</span> <span class="n">networkconfparse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># An already-split list of lines is joined and parsed.</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">config</span> <span class="o">=</span> <span class="n">networkconfparse</span><span class="o">.</span><span class="n">parse</span><span class="p">([</span><span class="s2">&quot;interface GigabitEthernet0/0&quot;</span><span class="p">,</span> <span class="s2">&quot; shutdown&quot;</span><span class="p">])</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># A bare string is &quot;tasted&quot;: if it names an existing file it is read,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># otherwise it is parsed as configuration text.</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">config</span> <span class="o">=</span> <span class="n">networkconfparse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;router1.cfg&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>A bare string containing a newline can never be a path, so it is always parsed
+as text. The rare footgun is a single-line config that happens to match an
+existing filename: it will be read as that file. To force literal-text
+interpretation, append a trailing newline. See the <a href="../../reference/parse/"><code>parse</code>
+reference</a> for the full string-tasting rule.</p>
+<div class="admonition warning">
+<p class="admonition-title">Do not taste untrusted strings</p>
+<p>Because a bare string can be read as a file, never pass an untrusted string
+to <code>parse()</code>. An attacker who controls the input could supply a path such as
+<code>/etc/passwd</code> and have its contents read back through the parsed tree. When
+the source is untrusted, guarantee text interpretation by ensuring it
+contains a newline (append <code>"\n"</code> to a single-line value), or wrap it in
+<code>io.StringIO</code> first.</p>
+</div>
 <h2 id="run-a-query">Run a query<a class="headerlink" href="#run-a-query" title="Permanent link">&para;</a></h2>
 <p><code>find()</code> searches the whole tree and accepts a regular expression, a <code>where</code>
 predicate, or both:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Interfaces that have an IP address configured anywhere beneath them.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">configured</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^interface &quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">has_child</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">))</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># The first matching line, or None.</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">mgmt</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip address 10\.0\.0\.1&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Where does that line live in the hierarchy?</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">mgmt</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># [&#39;interface GigabitEthernet0/0&#39;, &#39;ip address 10.0.0.1 255.255.255.0&#39;]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Interfaces that have an IP address configured anywhere beneath them.</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">configured</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^interface &quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">has_child</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">))</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># The first matching line, or None.</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">mgmt</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip address 10\.0\.0\.1&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Where does that line live in the hierarchy?</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">mgmt</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># [&#39;interface GigabitEthernet0/0&#39;, &#39;ip address 10.0.0.1 255.255.255.0&#39;]</span>
 </code></pre></div>
 <h2 id="use-a-relationship-helper">Use a relationship helper<a class="headerlink" href="#use-a-relationship-helper" title="Permanent link">&para;</a></h2>
 <p>For common cases, dedicated helpers read more clearly than a hand-written
 predicate. The query above is identical to:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">configured</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find_with_child</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^interface &quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">configured</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find_with_child</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^interface &quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Continue to the <a href="../../guide/querying/">Querying guide</a> for the full API.</p>
 
