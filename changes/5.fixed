@@ -1,0 +1,1 @@
+Declare `Programming Language :: Python :: 3.11`/`3.12`/`3.13` trove classifiers so PyPI advertises the supported Python versions and the README "Python versions" badge renders correctly.
