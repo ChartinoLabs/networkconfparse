@@ -85,6 +85,40 @@ config.find_with_ancestor(
 )
 ```
 
+### Negative helpers
+
+Config review is full of *absence* questions: interfaces without `shutdown`,
+neighbors without a `description`. Each positive helper has a `find_without_*`
+counterpart that returns nodes matching `pattern` for which the relationship is
+**absent**.
+
+| Helper | Returns nodes matching `pattern` that… |
+|--------|-----------------------------------------|
+| `find_without_child(pattern, child)` | have **no** direct child matching any `child` |
+| `find_without_descendant(pattern, descendant)` | have **no** `descendant` anywhere below |
+| `find_without_parent(pattern, parent)` | whose **direct parent** matches none of `parent` |
+| `find_without_ancestor(pattern, ancestor)` | have **none** of `ancestor` anywhere above |
+
+When given a list, the rule is **"none present"** (NOR): a node matches only when
+*none* of the patterns are found. So `find_without_child(r"^interface ", [r"^ip
+address ", r"^shutdown"])` returns interfaces lacking **both** lines; an interface
+carrying either one is excluded. (This is the NOR of the relationship, not the
+strict negation of `find_with_*`.)
+
+```python
+# Interfaces with no `ip address` configured.
+config.find_without_child(r"^interface ", r"^ip address ")
+
+# Router processes with no neighbor anywhere beneath them.
+config.find_without_descendant(r"^router bgp ", r"neighbor")
+```
+
+A **top-level line has no parent or ancestors**, so it is never "beneath" a
+matching one and always qualifies for `find_without_parent` and
+`find_without_ancestor`. Unlike `find_with_ancestor`, the negative variant takes
+no `adjacent` flag - the only useful negative is "none of these appear anywhere
+above."
+
 ## Navigating the tree
 
 Beyond searching, each node knows its place in the hierarchy:

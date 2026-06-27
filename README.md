@@ -95,6 +95,13 @@ config.find_with_parent(r"^neighbor ", r"^address-family ipv4")
 config.find_with_ancestor(r"^neighbor ", [r"^router bgp ", r"^address-family ipv4"])
 ```
 
+Each helper has a `find_without_*` counterpart for the equally common absence questions ("interfaces without an `ip address`"). Given a list they apply a "none present" (NOR) rule, returning nodes where *none* of the patterns are found:
+
+```python
+# Interfaces with neither an `ip address` nor a `shutdown` line.
+config.find_without_child(r"^interface ", [r"^ip address ", r"^shutdown"])
+```
+
 These compose naturally for SDK-style questions. For example, "find every ACL that does not end with an explicit deny":
 
 ```python
