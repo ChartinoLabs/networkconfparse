@@ -219,6 +219,16 @@ def parse(source: ConfigSource) -> Config:
     `pathlib.Path` is an explicit path signal and never falls back: a missing
     path raises ``FileNotFoundError``.
 
+    .. warning::
+
+       Because tasting can read a file from a bare ``str``, do not pass an
+       **untrusted** string to ``parse``: an attacker who controls the input
+       could supply a path (for example ``/etc/passwd``) and have its contents
+       read and returned through the parsed tree. When the source is untrusted,
+       guarantee text interpretation by ensuring it contains a newline (append
+       ``"\n"`` to a single-line value), or wrap it explicitly with
+       `io.StringIO` before calling ``parse``.
+
     The parser itself is network-OS agnostic: it makes no assumptions about a
     fixed indent width. A line is a child of the nearest preceding line with
     strictly less indentation, which handles IOS (1 space), NX-OS (2 spaces),

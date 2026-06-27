@@ -68,6 +68,15 @@ existing filename: it will be read as that file. To force literal-text
 interpretation, append a trailing newline. See the [`parse`
 reference](../reference/parse.md) for the full string-tasting rule.
 
+!!! warning "Do not taste untrusted strings"
+
+    Because a bare string can be read as a file, never pass an untrusted string
+    to `parse()`. An attacker who controls the input could supply a path such as
+    `/etc/passwd` and have its contents read back through the parsed tree. When
+    the source is untrusted, guarantee text interpretation by ensuring it
+    contains a newline (append `"\n"` to a single-line value), or wrap it in
+    `io.StringIO` first.
+
 ## Run a query
 
 `find()` searches the whole tree and accepts a regular expression, a `where`
