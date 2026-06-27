@@ -1,1 +1,0 @@
-Add a documentation style guide and an enforcement test that fails CI if any Markdown file or `mkdocs.yml` contains em-dash or en-dash characters.

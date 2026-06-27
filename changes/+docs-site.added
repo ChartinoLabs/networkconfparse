@@ -1,1 +1,0 @@
-Add a documentation site (MkDocs + Material) covering installation, the parsing model, and a usage guide, with an API reference auto-generated from docstrings via mkdocstrings, published to GitHub Pages.
