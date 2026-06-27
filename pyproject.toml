@@ -47,6 +47,12 @@ version-file = "networkconfparse/_version.py"
 pythonpath = ["."]
 testpaths = ["tests"]
 
+[tool.ty.src]
+# The docs build script imports mkdocs plugins from the optional ``docs``
+# group, which is not installed in the type-checking CI job. It is build
+# tooling, not library code, so it is excluded from type checking.
+exclude = ["docs"]
+
 [tool.ruff]
 exclude = ["networkconfparse/_version.py"]
 
