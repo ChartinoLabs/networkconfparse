@@ -1,0 +1,1 @@
+Fix the rendered API reference, which previously emitted reStructuredText markup as literal text. Docstrings now use Markdown so the `parse` input table, the security `warning` admonition, and cross-references to `Config`, `pathlib.Path`, and other types render correctly, with links to the Python standard library docs.

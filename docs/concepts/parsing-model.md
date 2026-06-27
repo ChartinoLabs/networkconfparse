@@ -5,7 +5,7 @@ predictable. This page describes that model.
 
 ## Lines become a tree
 
-[`parse`](../reference/parse.md) reads the configuration line by line and builds a
+[`parse`](../reference/parser.md) reads the configuration line by line and builds a
 tree of [`ConfigNode`](../reference/node.md) objects. A line is a **child** of the
 nearest preceding line with *strictly less* indentation. The top-level (column 0)
 lines become the children of the returned [`Config`](../reference/config.md).

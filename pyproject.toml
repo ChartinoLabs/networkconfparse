@@ -47,6 +47,12 @@ version-file = "networkconfparse/_version.py"
 pythonpath = ["."]
 testpaths = ["tests"]
 
+[tool.ty.src]
+# The docs build script imports mkdocs plugins from the optional ``docs``
+# group, which is not installed in the type-checking CI job. It is build
+# tooling, not library code, so it is excluded from type checking.
+exclude = ["docs"]
+
 [tool.ruff]
 exclude = ["networkconfparse/_version.py"]
 
@@ -115,6 +121,9 @@ dev = [
     "xenon==0.9.3",
 ]
 docs = [
+    "mkdocs-gen-files==0.6.0",
+    "mkdocs-literate-nav==0.6.2",
     "mkdocs-material==9.7.6",
+    "mkdocs-section-index==0.3.10",
     "mkdocstrings[python]==1.0.4",
 ]

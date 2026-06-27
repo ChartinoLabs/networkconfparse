@@ -1,0 +1,1 @@
+Generate the API reference pages automatically from the package source with mkdocs-gen-files and mkdocs-literate-nav, so new public modules and symbols appear without hand-maintained pages. The documentation plugins are pinned to versions that do not depend on `properdocs`.
