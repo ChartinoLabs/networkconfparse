@@ -2,6 +2,7 @@
 
 from .config import Config
 from .node import ConfigNode
-from .parser import ConfigSource, parse
+from .parser import parse
+from .typedefs import ConfigSource
 
 __all__ = ["Config", "ConfigNode", "ConfigSource", "parse"]

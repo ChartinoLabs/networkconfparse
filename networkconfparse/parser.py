@@ -2,18 +2,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable
 from pathlib import Path
-from typing import IO, TypeAlias
 
 from .config import Config
 from .node import ConfigNode
-
-# The input forms `parse` accepts: literal configuration text or a path-tasted
-# string, an explicit filesystem `Path`, an open file-like object (text or
-# binary), or an iterable of lines. See `parse` for the dispatch and
-# string-tasting rules.
-ConfigSource: TypeAlias = "str | Path | IO[str] | IO[bytes] | Iterable[str]"
+from .typedefs import ConfigSource
 
 
 def _leading_spaces(line: str) -> int:
