@@ -641,6 +641,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Relationship helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#negative-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -938,6 +955,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Relationship helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#negative-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1069,6 +1103,53 @@ against its parent, and so on):</p>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">adjacent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
 </code></pre></div>
+<h3 id="negative-helpers">Negative helpers<a class="headerlink" href="#negative-helpers" title="Permanent link">&para;</a></h3>
+<p>Config review is full of <em>absence</em> questions: interfaces without <code>shutdown</code>,
+neighbors without a <code>description</code>. Each positive helper has a <code>find_without_*</code>
+counterpart that returns nodes matching <code>pattern</code> for which the relationship is
+<strong>absent</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Returns nodes matching <code>pattern</code> that…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find_without_child(pattern, child)</code></td>
+<td>have <strong>no</strong> direct child matching any <code>child</code></td>
+</tr>
+<tr>
+<td><code>find_without_descendant(pattern, descendant)</code></td>
+<td>have <strong>no</strong> <code>descendant</code> anywhere below</td>
+</tr>
+<tr>
+<td><code>find_without_parent(pattern, parent)</code></td>
+<td>whose <strong>direct parent</strong> matches none of <code>parent</code></td>
+</tr>
+<tr>
+<td><code>find_without_ancestor(pattern, ancestor)</code></td>
+<td>have <strong>none</strong> of <code>ancestor</code> anywhere above</td>
+</tr>
+</tbody>
+</table>
+<p>When given a list, the rule is <strong>"none present"</strong> (NOR): a node matches only when
+<em>none</em> of the patterns are found. So <code>find_without_child(r"^interface ", [r"^ip
+address ", r"^shutdown"])</code> returns interfaces lacking <strong>both</strong> lines; an interface
+carrying either one is excluded. (This is the NOR of the relationship, not the
+strict negation of <code>find_with_*</code>.)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Interfaces with no `ip address` configured.</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">config</span><span class="o">.</span><span class="n">find_without_child</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^interface &quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Router processes with no neighbor anywhere beneath them.</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">config</span><span class="o">.</span><span class="n">find_without_descendant</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^router bgp &quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;neighbor&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>A <strong>top-level line has no parent or ancestors</strong>, so it is never "beneath" a
+matching one and always qualifies for <code>find_without_parent</code> and
+<code>find_without_ancestor</code>. Unlike <code>find_with_ancestor</code>, the negative variant takes
+no <code>adjacent</code> flag - the only useful negative is "none of these appear anywhere
+above."</p>
 <h2 id="navigating-the-tree">Navigating the tree<a class="headerlink" href="#navigating-the-tree" title="Permanent link">&para;</a></h2>
 <p>Beyond searching, each node knows its place in the hierarchy:</p>
 <ul>
@@ -1077,18 +1158,18 @@ against its parent, and so on):</p>
 <li><code>descendants</code> - iterate the whole subtree, depth-first (equivalent to <code>walk()</code>).</li>
 <li><code>root</code> - the top-level line this node belongs to.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">addr</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">addr</span><span class="o">.</span><span class="n">path</span>             <span class="c1"># [&#39;interface GigabitEthernet0/0&#39;, &#39;ip address 10.0.0.1 255.255.255.0&#39;]</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">addr</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">text</span>        <span class="c1"># &#39;interface GigabitEthernet0/0&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">addr</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip address &quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">addr</span><span class="o">.</span><span class="n">path</span>             <span class="c1"># [&#39;interface GigabitEthernet0/0&#39;, &#39;ip address 10.0.0.1 255.255.255.0&#39;]</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">addr</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">text</span>        <span class="c1"># &#39;interface GigabitEthernet0/0&#39;</span>
 </code></pre></div>
 <h2 id="worked-example-acls-without-a-trailing-deny">Worked example: ACLs without a trailing deny<a class="headerlink" href="#worked-example-acls-without-a-trailing-deny" title="Permanent link">&para;</a></h2>
 <p>The helpers and navigation compose into SDK-style questions. For example, "find
 every ACL that does not end with an explicit deny":</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">acls</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip access-list &quot;</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">missing_deny</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">acl</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">acls</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">acl</span><span class="o">.</span><span class="n">children</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">acl</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^deny &quot;</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">acls</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ip access-list &quot;</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">missing_deny</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">acl</span> <span class="k">for</span> <span class="n">acl</span> <span class="ow">in</span> <span class="n">acls</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">acl</span><span class="o">.</span><span class="n">children</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">acl</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^deny &quot;</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">]</span>
 </code></pre></div>
 
 

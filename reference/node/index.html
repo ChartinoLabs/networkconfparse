@@ -911,6 +911,50 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_child
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_descendant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_descendant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_parent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_parent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_ancestor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_ancestor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#networkconfparse.ConfigNode.matches" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1179,6 +1223,50 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_child
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_descendant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_descendant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_parent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_parent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkconfparse.ConfigNode.find_without_ancestor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_without_ancestor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#networkconfparse.ConfigNode.matches" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1256,27 +1344,27 @@ the line they are indented beneath.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>networkconfparse/node.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-201">201</a></span>
-<span class="normal"><a href="#__codelineno-0-202">202</a></span>
-<span class="normal"><a href="#__codelineno-0-203">203</a></span>
-<span class="normal"><a href="#__codelineno-0-204">204</a></span>
-<span class="normal"><a href="#__codelineno-0-205">205</a></span>
-<span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span>
-<span class="normal"><a href="#__codelineno-0-208">208</a></span>
-<span class="normal"><a href="#__codelineno-0-209">209</a></span>
-<span class="normal"><a href="#__codelineno-0-210">210</a></span>
-<span class="normal"><a href="#__codelineno-0-211">211</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a>    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="n">parent</span><span class="p">:</span> <span class="n">ConfigNode</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a node from its text, indentation depth, and parent.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="n">indent</span>
-<a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConfigNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#__codelineno-0-295">295</a></span>
+<span class="normal"><a href="#__codelineno-0-296">296</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="n">parent</span><span class="p">:</span> <span class="n">ConfigNode</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a node from its text, indentation depth, and parent.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="n">indent</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConfigNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -1958,6 +2046,314 @@ parent, the next against its parent, and so on. Implemented with
 <div class="doc doc-object doc-function">
 
 
+<h3 id="networkconfparse.ConfigNode.find_without_child" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">find_without_child</span>
+
+
+<a href="#networkconfparse.ConfigNode.find_without_child" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_without_child</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="re.Pattern">Pattern</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">child</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="Patterns
+
+
+  
+      module-attribute
+   (networkconfparse.typedefs.Patterns)" href="../typedefs/#networkconfparse.typedefs.Patterns">Patterns</a></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="ConfigNode (networkconfparse.node.ConfigNode)" href="#networkconfparse.ConfigNode">ConfigNode</a></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return nodes matching <code>pattern</code> that lack every <code>child</code> pattern.</p>
+<p>The negative counterpart of <code>find_with_child</code>. <code>child</code> is one regex
+or an iterable of them; a node matches when <strong>none</strong> of them match any
+direct child (the "none present" / NOR rule). For <code>[a, b]</code> a node
+qualifies only if it has no direct child matching <code>a</code> and none
+matching <code>b</code> - so a node carrying just one of them is excluded.
+Implemented with <code>find</code> and a <code>where</code> predicate.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>networkconfparse/node.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#__codelineno-0-208">208</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_without_child</span><span class="p">(</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="n">child</span><span class="p">:</span> <span class="n">Patterns</span><span class="p">,</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConfigNode</span><span class="p">]:</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return nodes matching ``pattern`` that lack every ``child`` pattern.</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    The negative counterpart of `find_with_child`. ``child`` is one regex</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    or an iterable of them; a node matches when **none** of them match any</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    direct child (the &quot;none present&quot; / NOR rule). For ``[a, b]`` a node</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    qualifies only if it has no direct child matching ``a`` and none</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    matching ``b`` - so a node carrying just one of them is excluded.</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    Implemented with `find` and a ``where`` predicate.</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="n">children</span> <span class="o">=</span> <span class="n">_as_list</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a>        <span class="n">pattern</span><span class="p">,</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>        <span class="n">where</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">has_child</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">),</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="networkconfparse.ConfigNode.find_without_descendant" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">find_without_descendant</span>
+
+
+<a href="#networkconfparse.ConfigNode.find_without_descendant" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_without_descendant</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="re.Pattern">Pattern</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">descendant</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="Patterns
+
+
+  
+      module-attribute
+   (networkconfparse.typedefs.Patterns)" href="../typedefs/#networkconfparse.typedefs.Patterns">Patterns</a></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="ConfigNode (networkconfparse.node.ConfigNode)" href="#networkconfparse.ConfigNode">ConfigNode</a></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return nodes matching <code>pattern</code> with none of <code>descendant</code> below.</p>
+<p>The negative counterpart of <code>find_with_descendant</code>. <code>descendant</code> is
+one regex or an iterable of them; a node matches when <strong>none</strong> of them
+match any descendant at any depth (the "none present" / NOR rule). For
+<code>[a, b]</code> a node carrying just one of the two below it is excluded.
+Implemented with <code>find</code> and a <code>where</code> predicate.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>networkconfparse/node.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#__codelineno-0-229">229</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_without_descendant</span><span class="p">(</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="n">descendant</span><span class="p">:</span> <span class="n">Patterns</span><span class="p">,</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConfigNode</span><span class="p">]:</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return nodes matching ``pattern`` with none of ``descendant`` below.</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    The negative counterpart of `find_with_descendant`. ``descendant`` is</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">    one regex or an iterable of them; a node matches when **none** of them</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">    match any descendant at any depth (the &quot;none present&quot; / NOR rule). For</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">    ``[a, b]`` a node carrying just one of the two below it is excluded.</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">    Implemented with `find` and a ``where`` predicate.</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a>    <span class="n">descendants</span> <span class="o">=</span> <span class="n">_as_list</span><span class="p">(</span><span class="n">descendant</span><span class="p">)</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>        <span class="n">pattern</span><span class="p">,</span>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a>        <span class="n">where</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="p">(</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a>            <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descendants</span><span class="p">)</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a>        <span class="p">),</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="networkconfparse.ConfigNode.find_without_parent" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">find_without_parent</span>
+
+
+<a href="#networkconfparse.ConfigNode.find_without_parent" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_without_parent</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="re.Pattern">Pattern</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="Patterns
+
+
+  
+      module-attribute
+   (networkconfparse.typedefs.Patterns)" href="../typedefs/#networkconfparse.typedefs.Patterns">Patterns</a></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="ConfigNode (networkconfparse.node.ConfigNode)" href="#networkconfparse.ConfigNode">ConfigNode</a></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return nodes matching <code>pattern</code> whose parent matches no <code>parent</code>.</p>
+<p>The negative counterpart of <code>find_with_parent</code>. <code>parent</code> is one regex
+or an iterable of them; a node matches when its direct parent matches
+<strong>none</strong> of them (the "none present" / NOR rule). A top-level node has
+no parent, so it can never sit beneath a matching one and always
+qualifies. For <code>[a, b]</code> a node whose parent matches just one of the
+two is excluded. Implemented with <code>find</code> and a <code>where</code> predicate.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>networkconfparse/node.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#__codelineno-0-242">242</a></span>
+<span class="normal"><a href="#__codelineno-0-243">243</a></span>
+<span class="normal"><a href="#__codelineno-0-244">244</a></span>
+<span class="normal"><a href="#__codelineno-0-245">245</a></span>
+<span class="normal"><a href="#__codelineno-0-246">246</a></span>
+<span class="normal"><a href="#__codelineno-0-247">247</a></span>
+<span class="normal"><a href="#__codelineno-0-248">248</a></span>
+<span class="normal"><a href="#__codelineno-0-249">249</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_without_parent</span><span class="p">(</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="n">parent</span><span class="p">:</span> <span class="n">Patterns</span><span class="p">,</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConfigNode</span><span class="p">]:</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return nodes matching ``pattern`` whose parent matches no ``parent``.</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    The negative counterpart of `find_with_parent`. ``parent`` is one regex</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    or an iterable of them; a node matches when its direct parent matches</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">    **none** of them (the &quot;none present&quot; / NOR rule). A top-level node has</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">    no parent, so it can never sit beneath a matching one and always</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="sd">    qualifies. For ``[a, b]`` a node whose parent matches just one of the</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">    two is excluded. Implemented with `find` and a ``where`` predicate.</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>    <span class="n">parents</span> <span class="o">=</span> <span class="n">_as_list</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a>        <span class="n">pattern</span><span class="p">,</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="n">where</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="n">_parent_matches_none</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">parents</span><span class="p">),</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="networkconfparse.ConfigNode.find_without_ancestor" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">find_without_ancestor</span>
+
+
+<a href="#networkconfparse.ConfigNode.find_without_ancestor" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">find_without_ancestor</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="re.Pattern">Pattern</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ancestor</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="Patterns
+
+
+  
+      module-attribute
+   (networkconfparse.typedefs.Patterns)" href="../typedefs/#networkconfparse.typedefs.Patterns">Patterns</a></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="ConfigNode (networkconfparse.node.ConfigNode)" href="#networkconfparse.ConfigNode">ConfigNode</a></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return nodes matching <code>pattern</code> with none of <code>ancestor</code> above.</p>
+<p>The negative counterpart of <code>find_with_ancestor</code>. <code>ancestor</code> is one
+regex or an iterable of them; a node matches when <strong>none</strong> of them
+match any ancestor at any depth (the "none present" / NOR rule). A
+top-level node has no ancestors and always qualifies. For <code>[a, b]</code> a
+node with just one of the two anywhere above it is excluded.</p>
+<p>Unlike <code>find_with_ancestor</code>, this takes no <code>adjacent</code> flag: negating
+an adjacent-chain match is rarely meaningful, so the only negative
+offered is "none of these appear anywhere in the ancestry." Implemented
+with <code>find</code> and a <code>where</code> predicate.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>networkconfparse/node.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-251">251</a></span>
+<span class="normal"><a href="#__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#__codelineno-0-254">254</a></span>
+<span class="normal"><a href="#__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#__codelineno-0-268">268</a></span>
+<span class="normal"><a href="#__codelineno-0-269">269</a></span>
+<span class="normal"><a href="#__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#__codelineno-0-272">272</a></span>
+<span class="normal"><a href="#__codelineno-0-273">273</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_without_ancestor</span><span class="p">(</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">ancestor</span><span class="p">:</span> <span class="n">Patterns</span><span class="p">,</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ConfigNode</span><span class="p">]:</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return nodes matching ``pattern`` with none of ``ancestor`` above.</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">    The negative counterpart of `find_with_ancestor`. ``ancestor`` is one</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    regex or an iterable of them; a node matches when **none** of them</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">    match any ancestor at any depth (the &quot;none present&quot; / NOR rule). A</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    top-level node has no ancestors and always qualifies. For ``[a, b]`` a</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">    node with just one of the two anywhere above it is excluded.</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">    Unlike `find_with_ancestor`, this takes no ``adjacent`` flag: negating</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">    an adjacent-chain match is rarely meaningful, so the only negative</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">    offered is &quot;none of these appear anywhere in the ancestry.&quot; Implemented</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">    with `find` and a ``where`` predicate.</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a>    <span class="n">ancestors</span> <span class="o">=</span> <span class="n">_as_list</span><span class="p">(</span><span class="n">ancestor</span><span class="p">)</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a>        <span class="n">pattern</span><span class="p">,</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>        <span class="n">where</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="n">_no_ancestor_matches</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ancestors</span><span class="p">),</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="networkconfparse.ConfigNode.matches" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">matches</span>
 
@@ -1976,21 +2372,21 @@ need not be anchored to match anywhere in the line.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>networkconfparse/node.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-252">252</a></span>
-<span class="normal"><a href="#__codelineno-0-253">253</a></span>
-<span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span>
-<span class="normal"><a href="#__codelineno-0-256">256</a></span>
-<span class="normal"><a href="#__codelineno-0-257">257</a></span>
-<span class="normal"><a href="#__codelineno-0-258">258</a></span>
-<span class="normal"><a href="#__codelineno-0-259">259</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="k">def</span><span class="w"> </span><span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this node&#39;s text matches ``pattern``.</span>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    ``pattern`` may be a string (treated as a regular expression) or a</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="sd">    pre-compiled pattern. Matching uses `re.search`, so the pattern</span>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    need not be anchored to match anywhere in the line.</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-337">337</a></span>
+<span class="normal"><a href="#__codelineno-0-338">338</a></span>
+<span class="normal"><a href="#__codelineno-0-339">339</a></span>
+<span class="normal"><a href="#__codelineno-0-340">340</a></span>
+<span class="normal"><a href="#__codelineno-0-341">341</a></span>
+<span class="normal"><a href="#__codelineno-0-342">342</a></span>
+<span class="normal"><a href="#__codelineno-0-343">343</a></span>
+<span class="normal"><a href="#__codelineno-0-344">344</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-337" name="__codelineno-0-337"></a><span class="k">def</span><span class="w"> </span><span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-338" name="__codelineno-0-338"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether this node&#39;s text matches ``pattern``.</span>
+<a id="__codelineno-0-339" name="__codelineno-0-339"></a>
+<a id="__codelineno-0-340" name="__codelineno-0-340"></a><span class="sd">    ``pattern`` may be a string (treated as a regular expression) or a</span>
+<a id="__codelineno-0-341" name="__codelineno-0-341"></a><span class="sd">    pre-compiled pattern. Matching uses `re.search`, so the pattern</span>
+<a id="__codelineno-0-342" name="__codelineno-0-342"></a><span class="sd">    need not be anchored to match anywhere in the line.</span>
+<a id="__codelineno-0-343" name="__codelineno-0-343"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-344" name="__codelineno-0-344"></a>    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
