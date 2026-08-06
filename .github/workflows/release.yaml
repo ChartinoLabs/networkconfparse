@@ -46,13 +46,19 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: Fetch all tags
-        run: git fetch --tags --force
+      - name: Ensure tag is available locally
+        run: |
+          git fetch origin tag ${{ github.ref_name }} --no-tags --force
+          git describe --tags --exact-match HEAD
       - uses: ./.github/actions/setup-python-uv
         with:
           python-version: "3.13"
       - name: Build package
-        run: uv build
+        env:
+          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ github.ref_name  }}
+        run: |
+          export SETUPTOOLS_SCM_PRETEND_VERSION="${SETUPTOOLS_SCM_PRETEND_VERSION#v}"
+          uv build
       - name: Verify package version matches tag
         env:
           TAG_NAME: ${{ github.ref_name }}
