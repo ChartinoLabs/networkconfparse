@@ -4,6 +4,22 @@ All notable changes to networkconfparse are documented in this file.
 
 <!-- towncrier release notes start -->
 
+## 0.3.0 - 2026-08-06
+
+### Added
+
+- Added support for Python 3.10. ([#20](https://github.com/ChartinoLabs/networkconfparse/pull/20))
+
+### Fixed
+
+- Declare `Programming Language :: Python :: 3.11`/`3.12`/`3.13` trove classifiers so PyPI advertises the supported Python versions and the README "Python versions" badge renders correctly. ([#5](https://github.com/ChartinoLabs/networkconfparse/pull/5))
+- Fix the rendered API reference, which previously emitted reStructuredText markup as literal text. Docstrings now use Markdown so the `parse` input table, the security `warning` admonition, and cross-references to `Config`, `pathlib.Path`, and other types render correctly, with links to the Python standard library docs. ([#6](https://github.com/ChartinoLabs/networkconfparse/pull/6))
+
+### Internal
+
+- Generate the API reference pages automatically from the package source with mkdocs-gen-files and mkdocs-literate-nav, so new public modules and symbols appear without hand-maintained pages. The documentation plugins are pinned to versions that do not depend on `properdocs`. ([#6](https://github.com/ChartinoLabs/networkconfparse/pull/6))
+
+
 ## 0.2.0 - 2026-06-27
 
 ### Added
