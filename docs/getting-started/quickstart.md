@@ -84,7 +84,9 @@ predicate, or both:
 
 ```python
 # Interfaces that have an IP address configured anywhere beneath them.
-configured = config.find(r"^interface ", where=lambda node: node.has_child(r"^ip address "))
+configured = config.find(
+    r"^interface ", where=lambda node: node.has_child(r"^ip address ")
+)
 
 # The first matching line, or None.
 mgmt = config.find_one(r"^ip address 10\.0\.0\.1")

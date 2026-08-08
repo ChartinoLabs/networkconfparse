@@ -15,7 +15,7 @@ optional `where` predicate, or both (combined with **AND**):
 config.find(r"^interface ")
 
 # By predicate.
-config.find(where=lambda node: not node.children)        # leaf lines
+config.find(where=lambda node: not node.children)  # leaf lines
 
 # Both: must satisfy the regex AND the predicate.
 config.find(r"^interface ", where=lambda node: node.has_child(r"^ip address "))
@@ -41,8 +41,8 @@ not its whole subtree:
 
 ```python
 interface = config.find_one(r"^interface GigabitEthernet0/0")
-interface.has_child(r"^ip address ")            # True
-interface.find_child(r"^shutdown")              # the child node, or None
+interface.has_child(r"^ip address ")  # True
+interface.find_child(r"^shutdown")  # the child node, or None
 ```
 
 ## Relationship helpers
@@ -130,8 +130,8 @@ Beyond searching, each node knows its place in the hierarchy:
 
 ```python
 addr = config.find_one(r"^ip address ")
-addr.path             # ['interface GigabitEthernet0/0', 'ip address 10.0.0.1 255.255.255.0']
-addr.root.text        # 'interface GigabitEthernet0/0'
+addr.path  # ['interface GigabitEthernet0/0', 'ip address 10.0.0.1 255.255.255.0']
+addr.root.text  # 'interface GigabitEthernet0/0'
 ```
 
 ## Worked example: ACLs without a trailing deny
@@ -142,7 +142,6 @@ every ACL that does not end with an explicit deny":
 ```python
 acls = config.find(r"^ip access-list ")
 missing_deny = [
-    acl for acl in acls
-    if not acl.children or not acl.children[-1].matches(r"^deny ")
+    acl for acl in acls if not acl.children or not acl.children[-1].matches(r"^deny ")
 ]
 ```
