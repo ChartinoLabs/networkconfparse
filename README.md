@@ -67,7 +67,9 @@ interface GigabitEthernet0/1 -> ['shutdown']
 
 ```python
 # Interfaces that have an IP address configured anywhere beneath them.
-configured = config.find(r"^interface ", where=lambda node: node.has_child(r"^ip address "))
+configured = config.find(
+    r"^interface ", where=lambda node: node.has_child(r"^ip address ")
+)
 
 # The first matching line, or None.
 mgmt = config.find_one(r"^ip address 10\.0\.0\.1")
@@ -107,8 +109,7 @@ These compose naturally for SDK-style questions. For example, "find every ACL th
 ```python
 acls = config.find(r"^ip access-list ")
 missing_deny = [
-    acl for acl in acls
-    if not acl.children or not acl.children[-1].matches(r"^deny ")
+    acl for acl in acls if not acl.children or not acl.children[-1].matches(r"^deny ")
 ]
 ```
 
