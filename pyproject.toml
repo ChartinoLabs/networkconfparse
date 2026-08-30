@@ -83,6 +83,19 @@ select = [
     "RUF",  # Ruff-specific rules
     "SIM",  # flake8-simplify
     "TRY",  # tryceratops
+    "DTZ",  # flake8-datetimez
+    "EXE",  # flake8-executable
+    "FA",  # flake8-future-annotations
+    "FBT",  # flake8-boolean-trap
+    "FLY",  # flynt
+    "FURB",  # refurb
+    "G",  # flake8-logging-format
+    "LOG",  # flake8-logging
+    "PTH",  # flake8-use-pathlib
+    "RET",  # flake8-return
+    "RSE",  # flake8-raise
+    "SLOT",  # flake8-slots
+    "TID",  # flake8-tidy-imports
 ]
 
 # Literal expected values in assertions are clearer than named constants.
