@@ -1,0 +1,1 @@
+Enabled additional Ruff rules for API hygiene, error handling, performance, pytest style, and maintainability.
