@@ -71,6 +71,18 @@ select = [
     "D",  # pydocstyle
     "T",  # flake8-print (includes T201 for pdb, replacing debug-statements hook)
     "PL", # Pylint
+    "A",  # flake8-builtins
+    "ARG",  # flake8-unused-arguments
+    "BLE",  # flake8-blind-except
+    "C4",  # flake8-comprehensions
+    "ERA",  # eradicate
+    "PERF",  # Perflint
+    "PGH",  # pygrep-hooks
+    "PIE",  # flake8-pie
+    "PT",  # flake8-pytest-style
+    "RUF",  # Ruff-specific rules
+    "SIM",  # flake8-simplify
+    "TRY",  # tryceratops
 ]
 
 # Literal expected values in assertions are clearer than named constants.

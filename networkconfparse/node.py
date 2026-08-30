@@ -281,7 +281,7 @@ class ConfigNode(_Queryable):
     the line they are indented beneath.
     """
 
-    __slots__ = ("text", "indent", "parent", "children")
+    __slots__ = ("children", "indent", "parent", "text")
 
     def __init__(
         self,
