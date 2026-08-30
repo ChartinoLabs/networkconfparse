@@ -70,7 +70,11 @@ select = [
     "ANN",# flake8-annotations
     "D",  # pydocstyle
     "T",  # flake8-print (includes T201 for pdb, replacing debug-statements hook)
+    "PL", # Pylint
 ]
+
+# Literal expected values in assertions are clearer than named constants.
+per-file-ignores = { "tests/*.py" = ["PLR2004"] }
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
