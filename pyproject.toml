@@ -96,10 +96,11 @@ select = [
     "RSE",  # flake8-raise
     "SLOT",  # flake8-slots
     "TID",  # flake8-tidy-imports
+    "S",  # flake8-bandit
 ]
 
-# Literal expected values in assertions are clearer than named constants.
-per-file-ignores = { "tests/*.py" = ["PLR2004"] }
+# Literal expected values and pytest assertions are valid in tests.
+per-file-ignores = { "tests/*.py" = ["PLR2004", "S101"] }
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
