@@ -986,7 +986,7 @@ directory name falls back to text. As a documented footgun, a single-line
 config that happens to match an existing filename will be read as that file;
 to force literal-text interpretation, append a trailing newline. A
 <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path"><code>pathlib.Path</code></a> is an explicit path signal and never falls
-back: a missing path raises <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError"><code>FileNotFoundError</code></a>.</p>
+back: a missing path raises <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/exceptions.html#FileNotFoundError"><code>FileNotFoundError</code></a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Because tasting can read a file from a bare <code>str</code>, do not pass an
